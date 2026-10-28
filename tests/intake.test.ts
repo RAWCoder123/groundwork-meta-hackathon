@@ -114,6 +114,7 @@ test("intake sends the image and schema to Meta without seeding fixture dimensio
   await mocked(
     async (url, init) => {
       assert.equal(url, "https://api.meta.ai/v1/chat/completions");
+      assert.equal(init?.redirect, "manual", "Workers-compatible, no credential forwarding");
       const body = JSON.parse(String(init?.body));
       assert.equal(body.model, "muse-spark-1.3");
       assert.equal(body.response_format.type, "json_schema");
@@ -187,4 +188,18 @@ test("intake provider failures do not leak credentials or silently substitute lo
       assert.ok(!(await r.text()).includes(key));
     },
   );
+});
+
+test("intake rejects provider redirects without forwarding the key or image", async () => {
+  let calls = 0;
+  await mocked(async (_url, init) => {
+    calls++;
+    assert.equal(init?.redirect, "manual");
+    return new Response(null, { status: 307, headers: { location: "https://elsewhere.example" } });
+  }, async () => {
+    const r = await handleIntake(request(), {});
+    assert.equal(r.status, 502);
+    assert.equal((await r.json()).code, "meta_request_failed");
+    assert.equal(calls, 1);
+  });
 });

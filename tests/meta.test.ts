@@ -175,11 +175,11 @@ test("callers cannot mark the fixture property review as completed", async () =>
 test("connect verifies the exact model through the official API", async () => {
   globalThis.fetch = async (input, init) => {
     assert.equal(input, "https://api.meta.ai/v1/models");
+    assert.equal(init?.redirect, "manual", "Workers-compatible, no credential forwarding");
     assert.equal(
       new Headers(init?.headers).get("authorization"),
       `Bearer ${SECRET}`,
     );
-    assert.equal(init?.redirect, "error");
     return provider({ data: [{ id: "muse-spark-1.3" }] });
   };
   const res = await handleApi(
@@ -206,6 +206,7 @@ test("Meta executes a real tool loop and returns only a checked unapplied patch"
   const requests: Record<string, unknown>[] = [];
   globalThis.fetch = async (input, init) => {
     assert.equal(input, "https://api.meta.ai/v1/responses");
+    assert.equal(init?.redirect, "manual");
     const body = JSON.parse(String(init?.body));
     requests.push(body);
     if (requests.length === 1)
@@ -392,4 +393,17 @@ test("local demonstration is clearly identified and requires no provider call", 
   assert.equal(res.status, 200);
   assert.equal((await res.json()).mode, "local");
   assert.equal(called, false);
+});
+
+test("connect rejects provider redirects without following them", async () => {
+  let calls = 0;
+  globalThis.fetch = async (_input, init) => {
+    calls++;
+    assert.equal(init?.redirect, "manual");
+    return new Response(null, { status: 302, headers: { location: "https://elsewhere.example" } });
+  };
+  const res = await handleApi(request("/api/meta/connect", {}, { "x-meta-api-key": SECRET }));
+  assert.equal(res.status, 502);
+  assert.equal((await res.json()).code, "meta_request_failed");
+  assert.equal(calls, 1);
 });

@@ -385,7 +385,8 @@ async function extractImage(
     try {
       res = await fetch(META_URL, {
         method: "POST",
-        redirect: "error",
+        // Workers supports manual/follow only. Reject redirects via !res.ok below.
+        redirect: "manual",
         signal: controller.signal,
         headers: {
           authorization: `Bearer ${key}`,

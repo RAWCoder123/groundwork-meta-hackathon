@@ -284,7 +284,8 @@ async function metaJson(
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
       signal,
-      redirect: "error",
+      // Workers supports manual/follow only. Never forward the key on redirects.
+      redirect: "manual",
     });
   } catch {
     if (signal.aborted)
