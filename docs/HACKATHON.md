@@ -1,10 +1,10 @@
-# Groundwork hackathon build
+# Schema hackathon build
 
 ## Intended demonstration
 
-Groundwork connects construction intent to editable geometry, measured checks, a reviewed correction, and a consistent planning handoff. Show one complete interaction rather than claiming automation of the entire construction lifecycle.
+Schema connects construction intent to editable geometry, measured checks, a reviewed correction, and a consistent planning handoff. Show one complete interaction rather than claiming automation of the entire construction lifecycle.
 
-The current build uses three fictional sites and labeled numerical assumptions. That is a development fixture, not evidence of legal or permit eligibility. The Meta integration exists in source; authenticated provider acceptance must be exercised before presenting it as a completed live capability.
+The current build uses three fictional sites, labeled numerical assumptions, and a separate conditional source-linked R5 subset. That is a development fixture, not evidence of legal or permit eligibility. The Meta integration exists in source; authenticated provider acceptance must be exercised before presenting it as a completed live capability.
 
 ## Event-created work and external components
 
@@ -43,8 +43,8 @@ If Meta access is unavailable, label the local demonstration honestly and identi
 ## Remaining gates
 
 1. **Live Meta acceptance.** The connection button checks model availability. An actual tool-loop request and reviewed application must still succeed. Report measured latency/usage only after observation.
-2. **Small official rule pack.** Have a qualified reviewer help select a narrow project/zone. Record authoritative sections, effective dates, applicability predicates, definitions and exceptions. Missing conditions must produce review. Do not simply relabel the sample thresholds as verified.
-3. **Rights-cleared plan intake.** Add a dimensioned drawing with permission to process and demonstrate it. Validate extraction and require confirmation of uncertain measurements. This is not implemented. Photo segmentation cannot replace a survey.
+2. **Professional review of source-linked checks.** Seven conditional R5 checks now trace to official sections with page-date/access metadata. Four location/coverage calculations can run under declared fictional facts; living area, code-measured height and real applicability remain unresolved. Have a qualified reviewer verify the code interpretation and supported scope; do not treat source traceability as property certification.
+3. **Plan intake live acceptance.** PNG/JPEG/WebP intake is implemented with explicit sending, structured extraction, confirmation and mismatch/staleness guards; a fictional dimensioned image is included. Test it with an activated Meta key before claiming live success. PDF intake and survey reconstruction are not implemented.
 4. **Submission artifacts.** Finish the three-minute video, public source repository, event-created contribution note, accessible product/video links, and participant listing.
 
 The product does not issue permits, establish legal compliance, generate complete architecture/engineering documents, or provide validated structural/environmental analysis.
@@ -66,3 +66,7 @@ The [event overview](https://events.cerebralvalley.ai/e/meta-ai-developer-hackat
 - [API cookbook](https://github.com/meta-models/meta-model-cookbook), [fundamentals](https://raw.githubusercontent.com/meta-models/meta-model-cookbook/main/01_api_fundamentals/README.md), [Muse Code recipes](https://raw.githubusercontent.com/meta-models/meta-model-cookbook/main/04_muse_code/README.md), and [open-model cookbook](https://github.com/meta-models/meta-oss-cookbook).
 - [Portland ADU zoning guide](https://www.portland.gov/ppd/zoning-land-use/zoning-code-overview/adu-zoning) and [PortlandMaps API documentation](https://www.portlandmaps.com/development/?action=DisplayApi). Research references; no live property-data integration is claimed.
 - Session pages: [multimodal intelligence](https://developers.meta.com/resources/videos/multimodal-intelligence-of-muse-spark/), [capabilities to production](https://developers.meta.com/resources/videos/building-with-muse-spark-and-muse-code/), and [roadmap](https://developers.meta.com/resources/videos/the-road-ahead-superintelligence-blueprint/). Pages/descriptions were accessed; full transcripts were unavailable, and the videos are not represented as watched.
+
+## Decision-layer demonstration
+
+Use Compare to show compact and larger layouts. The default24ftdesign produces20×20ft and28×28ft alternatives:400 versus784sqft footprint, with3,520 versus3,136sqft modeled open ground. Switching the priority changes the recommendation. Select an alternative, inspect its3Dstate, open source-linked findings, then export the same revision. These are model-derived comparisons, not cost, maintenance, material-performance or climate predictions.

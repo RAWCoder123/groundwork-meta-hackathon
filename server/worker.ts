@@ -1,4 +1,5 @@
 import { handleApi } from "./api";
+import { handleIntake } from "./intake";
 // Generated at build time. No credentials or project data are embedded.
 // @ts-expect-error generated module
 import assets from "../build/assets.js";
@@ -9,6 +10,7 @@ export default {
     env: Record<string, string | undefined>,
   ): Promise<Response> {
     const url = new URL(request.url);
+    if (url.pathname === "/api/intake") return handleIntake(request, env);
     if (url.pathname.startsWith("/api/")) return handleApi(request, env);
     if (request.method !== "GET" && request.method !== "HEAD")
       return new Response("Method not allowed", { status: 405 });
@@ -16,7 +18,10 @@ export default {
       assets[url.pathname === "/" ? "/index.html" : url.pathname] ??
       (url.pathname.includes(".") ? null : assets["/index.html"]);
     if (!asset) return new Response("Not found", { status: 404 });
-    return new Response(request.method === "HEAD" ? null : asset.body, {
+    const body = asset.binary
+      ? Uint8Array.from(atob(asset.body), (char) => char.charCodeAt(0))
+      : asset.body;
+    return new Response(request.method === "HEAD" ? null : body, {
       headers: {
         "Content-Type": asset.type,
         "Cache-Control": url.pathname.startsWith("/assets/")

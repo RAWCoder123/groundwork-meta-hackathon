@@ -4,9 +4,66 @@ import {
   CircleAlert,
   CircleX,
   RotateCcw,
+  ImagePlus,
 } from "lucide-react";
 import { SITES } from "../domain/fixtures";
+import { useEffect, useState } from "react";
 import type { Check, DesignPatch, Project } from "../domain/types";
+
+function DimensionField({
+  label,
+  value,
+  min,
+  max,
+  onCommit,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  onCommit: (value: number) => void;
+}) {
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => setDraft(String(value)), [value]);
+  function commit() {
+    if (!draft.trim()) {
+      setDraft(String(value));
+      return;
+    }
+    const next = Number(draft);
+    if (!Number.isFinite(next)) {
+      setDraft(String(value));
+      return;
+    }
+    if (next !== value) onCommit(next);
+    if (next < min || next > max) setDraft(String(value));
+  }
+  return (
+    <label className="field-row">
+      <span>{label}</span>
+      <div className="number-wrap">
+        <input
+          aria-label={label}
+          type="number"
+          min={min}
+          max={max}
+          step={0.5}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commit}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.currentTarget.blur();
+            if (e.key === "Escape") {
+              e.preventDefault();
+              setDraft(String(value));
+            }
+          }}
+        />
+        <span>ft</span>
+      </div>
+    </label>
+  );
+}
 
 export function OutcomeIcon({ outcome }: { outcome: Check["outcome"] }) {
   const Icon =
@@ -27,6 +84,7 @@ export function Inspector({
   onSite,
   onEvidence,
   onReset,
+  onIntake,
 }: {
   project: Project;
   checks: Check[];
@@ -34,6 +92,7 @@ export function Inspector({
   onSite: (id: string) => void;
   onEvidence: () => void;
   onReset: () => void;
+  onIntake: () => void;
 }) {
   const field = (
     label: string,
@@ -41,27 +100,14 @@ export function Inspector({
     min: number,
     max: number,
   ) => (
-    <label className="field-row">
-      <span>{label}</span>
-      <div className="number-wrap">
-        <input
-          aria-label={label}
-          type="number"
-          min={min}
-          max={max}
-          step={1}
-          value={project.design[key]}
-          onChange={(e) => {
-            if (
-              e.target.value !== "" &&
-              Number.isFinite(e.target.valueAsNumber)
-            )
-              onChange({ [key]: e.target.valueAsNumber });
-          }}
-        />
-        <span>ft</span>
-      </div>
-    </label>
+    <DimensionField
+      key={key}
+      label={label}
+      value={project.design[key]}
+      min={min}
+      max={max}
+      onCommit={(value) => onChange({ [key]: value })}
+    />
   );
   const groups = [
     {
@@ -77,6 +123,18 @@ export function Inspector({
     {
       title: "Site information",
       ids: ["dimensions-confirmed", "overlays-reviewed"],
+    },
+    {
+      title: "Portland R5 scenario",
+      ids: [
+        "portland-adu-location",
+        "portland-accessory-coverage",
+        "portland-individual-coverage",
+        "portland-total-coverage",
+        "portland-living-area",
+        "portland-height",
+        "portland-applicability",
+      ],
     },
   ];
   return (
@@ -140,6 +198,10 @@ export function Inspector({
         <p className="site-size">
           {project.site.width} × {project.site.depth} ft · fictional lot
         </p>
+        <button className="button plan-intake-button" onClick={onIntake}>
+          <ImagePlus size={14} />
+          Read a plan image
+        </button>
       </section>
       <section className="inspector-section area-section">
         <div>
@@ -154,7 +216,7 @@ export function Inspector({
       <section className="inspector-section check-section">
         <div className="section-label">
           <h3>Measured checks</h3>
-          <span>Sample rules</span>
+          <span>See evidence</span>
         </div>
         {groups.map((group) => {
           const rows = checks.filter((c) => group.ids.includes(c.id));

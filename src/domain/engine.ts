@@ -1,3 +1,4 @@
+import { checkPortland, fixturePortlandFacts } from "./portland";
 import { RULES } from "./fixtures";
 import type { Check, Design, DesignPatch, Project, Rect } from "./types";
 
@@ -112,7 +113,7 @@ export function checkProject(project: Project): Check[] {
   });
   const footprint = design.width * design.depth;
   const overlap = overlapArea(design, site.house);
-  return [
+  const checks: Check[] = [
     numeric(
       "west-setback",
       "West boundary",
@@ -224,6 +225,7 @@ export function checkProject(project: Project): Check[] {
         : "Zoning eligibility, overlays, easements, utilities, trees, access, hazards, building/fire rules and engineering remain outside this demonstration and require review.",
     },
   ];
+  return [...checks, ...checkPortland(project, fixturePortlandFacts(project))];
 }
 
 function patchFrom(before: Design, after: Design): DesignPatch {

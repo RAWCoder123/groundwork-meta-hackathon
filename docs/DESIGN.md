@@ -29,3 +29,7 @@ Compared the concept and final browser capture using image inspection. Browser c
 | Geometry | Intentionally uses real schematic WebGL geometry rather than the concept's photoreal render; dimensions, shadows and dragging respond to state. |
 
 Fixed viewport-height expansion, clipped composition, label legibility and geographic handedness. Verified boundary failure→repair→apply→evidence, direct plan dragging, half-hour sun input and export. The above-the-fold copy comparison retained the intended workflow; deliberate differences are the truthful sample statuses, fixture names, revision and control hints. No known unresolved layout clipping remains at the tested widths.
+
+## Schema continuation
+
+The user selected the Schema name and decision-layer direction. Added Compare and plan-image intake in the existing design system. Kept diagrammatic source checks separate from demonstration assumptions. Browser verification covered priority change→recommendation→apply, local image selection→connection dialog→return with image preserved, and mobile390×844 plusdesktop1100×720. The1536×1024reference-size editor was also checked when the browser viewport capability became available. Compared layout, typography, palette, spacing, control labels and actual interactive geometry. Schema branding, Compare, image intake and source-linked findings are intentional changes to the original concept.

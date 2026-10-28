@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { handleApi } from "./server/api";
+import { handleIntake } from "./server/intake";
 
 export default defineConfig(({ mode }) => {
   const env = { ...loadEnv(mode, process.cwd(), ""), ...process.env };
@@ -14,9 +15,11 @@ export default defineConfig(({ mode }) => {
             try {
               const chunks: Buffer[] = [];
               let bytes = 0;
+              const limit =
+                req.url?.split("?")[0] === "/intake" ? 5_700_000 : 100_000;
               for await (const chunk of req) {
                 bytes += chunk.length;
-                if (bytes > 100_000) {
+                if (bytes > limit) {
                   res.writeHead(413);
                   res.end("Request too large");
                   return;
@@ -38,7 +41,10 @@ export default defineConfig(({ mode }) => {
                   ? { body: Buffer.concat(chunks) }
                   : {}),
               });
-              const response = await handleApi(request, env);
+              const response =
+                new URL(request.url).pathname === "/api/intake"
+                  ? await handleIntake(request, env)
+                  : await handleApi(request, env);
               res.writeHead(
                 response.status,
                 Object.fromEntries(response.headers),

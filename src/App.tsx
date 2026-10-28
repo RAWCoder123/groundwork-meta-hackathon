@@ -21,6 +21,8 @@ import type { AgentResult, DesignPatch, Project } from "./domain/types";
 import { Inspector } from "./components/Inspector";
 import { SiteScene } from "./components/SiteScene";
 import { Evidence } from "./components/Evidence";
+import { PlanIntake } from "./components/PlanIntake";
+import { CompareDesigns } from "./components/CompareDesigns";
 import { Assistant, type Message, type Proposal } from "./components/Assistant";
 
 type Activity = { id: number; time: string; title: string; detail: string };
@@ -58,7 +60,9 @@ function download(name: string, body: string, type: string) {
 
 export default function App() {
   const [project, setProject] = useState(initialProject),
-    [tab, setTab] = useState<"design" | "evidence" | "activity">("design"),
+    [tab, setTab] = useState<"design" | "compare" | "evidence" | "activity">(
+      "design",
+    ),
     [view, setView] = useState<"3d" | "plan">("3d");
   const [hour, setHour] = useState(15),
     [month, setMonth] = useState(6),
@@ -69,6 +73,7 @@ export default function App() {
     [history, setHistory] = useState<Project[]>([]),
     [notice, setNotice] = useState(""),
     [modal, setModal] = useState(false),
+    [intakeOpen, setIntakeOpen] = useState(false),
     [apiKey, setApiKey] = useState(""),
     [draftKey, setDraftKey] = useState(""),
     [serverConfigured, setServerConfigured] = useState(false),
@@ -272,7 +277,7 @@ export default function App() {
   async function importProject(file: File) {
     try {
       if (file.size > 30000)
-        throw new Error("Use a Groundwork project file smaller than 30 KB.");
+        throw new Error("Use a Schema project file smaller than 30 KB.");
       const parsed = JSON.parse(await file.text());
       const id = parsed.site?.id;
       const base = makeProject(id);
@@ -306,23 +311,25 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <a href="/" className="brand" aria-label="Groundwork home">
+        <a href="/" className="brand" aria-label="Schema home">
           <House size={27} strokeWidth={1.6} />
-          <span>Groundwork</span>
+          <span>Schema</span>
         </a>
         <div className="project-name">
           Backyard studio<small>Saved on this device</small>
         </div>
         <nav aria-label="Workspace views">
-          {(["design", "evidence", "activity"] as const).map((item) => (
-            <button
-              key={item}
-              className={tab === item ? "active" : ""}
-              onClick={() => setTab(item)}
-            >
-              {item[0].toUpperCase() + item.slice(1)}
-            </button>
-          ))}
+          {(["design", "compare", "evidence", "activity"] as const).map(
+            (item) => (
+              <button
+                key={item}
+                className={tab === item ? "active" : ""}
+                onClick={() => setTab(item)}
+              >
+                {item[0].toUpperCase() + item.slice(1)}
+              </button>
+            ),
+          )}
         </nav>
         <div className="header-actions">
           <button
@@ -360,6 +367,7 @@ export default function App() {
           onChange={update}
           onSite={switchSite}
           onEvidence={() => setTab("evidence")}
+          onIntake={() => setIntakeOpen(true)}
           onReset={() => {
             const next = {
               ...makeProject(project.site.id),
@@ -507,6 +515,14 @@ export default function App() {
                 </div>
               </div>
             </>
+          ) : tab === "compare" ? (
+            <CompareDesigns
+              project={project}
+              onApply={(patch) => {
+                update(patch, "Compared design selected");
+                setTab("design");
+              }}
+            />
           ) : tab === "evidence" ? (
             <Evidence project={project} checks={checks} />
           ) : (
@@ -622,6 +638,23 @@ export default function App() {
             <X size={14} />
           </button>
         </div>
+      )}
+      {intakeOpen && (
+        <PlanIntake
+          project={project}
+          apiKey={apiKey}
+          connected={connected}
+          onClose={() => setIntakeOpen(false)}
+          onConnect={() => {
+            setModal(true);
+          }}
+          onApply={(patch) => {
+            update(patch, "Reviewed plan dimensions applied");
+            setNotice(
+              "ADU dimensions updated. All checks have been recalculated.",
+            );
+          }}
+        />
       )}
       <dialog
         ref={modalRef}

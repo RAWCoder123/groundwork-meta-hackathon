@@ -14,6 +14,11 @@ const types = {
   ".css": "text/css; charset=utf-8",
   ".svg": "image/svg+xml",
   ".json": "application/json",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
+  ".woff2": "font/woff2",
 };
 const assets = {};
 async function walk(dir, prefix = "") {
@@ -23,8 +28,11 @@ async function walk(dir, prefix = "") {
     if (item.isDirectory()) await walk(path, key);
     else {
       const ext = item.name.slice(item.name.lastIndexOf("."));
+      const binary = [".png", ".jpg", ".jpeg", ".webp", ".woff2"].includes(ext);
+      const bytes = await readFile(path);
       assets[key] = {
-        body: await readFile(path, "utf8"),
+        body: bytes.toString(binary ? "base64" : "utf8"),
+        binary,
         type: types[ext] || "text/plain",
       };
     }
@@ -48,4 +56,4 @@ await build({
   minify: true,
 });
 await copyFile(".openai/hosting.json", "dist/.openai/hosting.json");
-console.log("Packaged Groundwork Worker with embedded browser assets.");
+console.log("Packaged Schema Worker with embedded browser assets.");
