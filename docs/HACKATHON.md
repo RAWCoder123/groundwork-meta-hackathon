@@ -1,6 +1,23 @@
 # Schema hackathon build
 
-## Intended demonstration
+## Primary commercial demonstration (October 29)
+
+The submission now leads with a commercial permit corrections coordinator, not residential feasibility. See [feasibility and execution](COMMERCIAL-FEASIBILITY.md). Every new commercial module is event-created work: Permit desk UI, strict case/evidence schema, independent readiness assessment, bounded Meta correction tools, reviewed draft application, and response-coordination packet. The prior residential scene remains a separate study and supplies no commercial code rules.
+
+Three-minute commercial demo:
+
+| Time | Show | Supported claim |
+| --- | --- | --- |
+| 0:00–0:25 | Fictional Portland office TI checksheet and source scope | One jurisdiction, one corrections route, original numbered reviewer wording |
+| 0:25–0:55 | Two current plan excerpts; third item has no evidence | Versioned evidence register, explicit missing work |
+| 0:55–1:50 | In verified Meta mode request response drafts; expose inspection, readiness and proposal tools | Actual Meta reasoning orchestrates working functions; no scripted substitute |
+| 1:50–2:20 | Apply drafts, review evidence, mark one response reviewed | Applying prose does not approve or resolve everything |
+| 2:20–2:45 | Change a document revision and inspect stale references; export packet | Readiness depends on current evidence and applicant review |
+| 2:45–3:00 | Show unresolved fire-alarm work and professional/DevHub handoff | Missing design work remains visible; no invented permit approval |
+
+Before recording: complete an authenticated commercial request, inspect exact model/tool results, apply the reviewed proposal and export the matching revision. Connection catalog success is insufficient. The new commercial loop is not live-verified merely because the user connected the earlier build. Use authorized or synthetic material, arrange judge access, and keep keys out of recordings.
+
+## Earlier residential study demonstration
 
 Schema connects construction intent to editable geometry, measured checks, a reviewed correction, and a consistent planning handoff. Show one complete interaction rather than claiming automation of the entire construction lifecycle.
 

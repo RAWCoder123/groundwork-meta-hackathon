@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { handleApi } from "./server/api";
 import { handleIntake } from "./server/intake";
+import { handlePermits } from "./server/permits";
 
 export default defineConfig(({ mode }) => {
   const env = { ...loadEnv(mode, process.cwd(), ""), ...process.env };
@@ -44,6 +45,8 @@ export default defineConfig(({ mode }) => {
               const response =
                 new URL(request.url).pathname === "/api/intake"
                   ? await handleIntake(request, env)
+                  : new URL(request.url).pathname === "/api/permits"
+                    ? await handlePermits(request, env)
                   : await handleApi(request, env);
               res.writeHead(
                 response.status,

@@ -2,11 +2,26 @@
 
 [Public source repository](https://github.com/RAWCoder123/groundwork-meta-hackathon)
 
-Schema is an ADU concept-planning workspace built for the Meta Global AI Developer Hackathon. Compare backyard dwelling alternatives, edit them in 3D, inspect measured consequences and source-linked scenario checks, review a Meta proposal, and export a consistent planning handoff. The first development version used the working name Groundwork; existing source and preview URLs retain that identifier.
+Schema is a commercial permit-correction coordination workspace built for the Meta Global AI Developer Hackathon. Its primary workflow is an existing Portland office tenant improvement: preserve reviewer items, coordinate response owners, link current plan excerpts, review Meta-generated drafts, and export a response handoff. Earlier residential design tools remain in separate views as a development study; their R5 rules are not commercial requirements. Existing repository and preview URLs retain the working name Groundwork.
 
-**Current scope:** three fictional Portland study sites, explicitly labeled demonstration assumptions, and a limited source-linked Portland R5 scenario. Source-derived limits do not certify property applicability. Schema does not determine legal compliance, prepare complete permit applications, or issue permits. The server implementation and controlled-provider tests exist; an authenticated live acceptance run has not yet been completed. A live Meta Model API key is needed to exercise the Meta agent; local demonstration mode is separate and clearly identified.
+**Current commercial scope:** Portland, Oregon standard Single PDF corrections for an interior, nonstructural, same-use office TI. The sample is fictional. Case inputs are registered text excerpts, not complete uploaded plan PDFs. The app does not certify drawings, establish code compliance, submit to DevHub, issue permits, or predict approval dates. Source links describe process requirements, not parcel-specific approval.
 
-## What works in this version
+## Commercial workflow
+
+- Open Permit desk, inspect the numbered reviewer comments and the current document-excerpt register.
+- Record scope and permit-history/code-edition confirmation; unknowns remain explicit blockers.
+- In connected Meta mode, explicitly send the case to a bounded Muse Spark tool loop: inspect case → assess readiness → propose evidence-linked responses.
+- Review the proposed drafts before applying them. Evidence quotations, sheet identifiers, document IDs, and revision references must match the register. Drafting a response never approves it.
+- Edit responses and references manually, review each recorded item, and see unresolved work. The fictional case deliberately lacks fire-alarm evidence.
+- Changes invalidate approvals; proposals for an older case revision cannot be applied.
+- Export a standalone HTML coordination packet with reviewer wording, responses, references, blockers, and source instructions. Print to PDF for review; actual drawing files still need separate preparation and applicant submission.
+- Save a validated case in this browser's local storage. Keys remain separate and transient; this is not a shared customer records system.
+
+See [commercial feasibility and execution](docs/COMMERCIAL-FEASIBILITY.md) for difficulty, competitive landscape, pilot gates, exclusions, and the route beyond the hackathon.
+
+## Retained residential study
+
+The separate design, comparison, evidence, and activity views retain these development features:
 
 - Switch among three fictional sites: Alder courtyard, Cedar garden, and Birch narrow lot.
 - Edit width, depth, overall concept height, roof, and placement; drag the ADU in 3D or plan view. Orbit and zoom the 3D scene. A plan fallback is available when WebGL is unavailable.

@@ -23,6 +23,7 @@ import { SiteScene } from "./components/SiteScene";
 import { Evidence } from "./components/Evidence";
 import { PlanIntake } from "./components/PlanIntake";
 import { CompareDesigns } from "./components/CompareDesigns";
+import { PermitDesk } from "./components/PermitDesk";
 import { Assistant, type Message, type Proposal } from "./components/Assistant";
 
 type Activity = { id: number; time: string; title: string; detail: string };
@@ -60,8 +61,8 @@ function download(name: string, body: string, type: string) {
 
 export default function App() {
   const [project, setProject] = useState(initialProject),
-    [tab, setTab] = useState<"design" | "compare" | "evidence" | "activity">(
-      "design",
+    [tab, setTab] = useState<"permits" | "design" | "compare" | "evidence" | "activity">(
+      "permits",
     ),
     [view, setView] = useState<"3d" | "plan">("3d");
   const [hour, setHour] = useState(15),
@@ -316,17 +317,17 @@ export default function App() {
           <span>Schema</span>
         </a>
         <div className="project-name">
-          Backyard studio<small>Saved on this device</small>
+          {tab === "permits" ? "Commercial permit desk" : "Residential design study"}<small>Saved on this device</small>
         </div>
         <nav aria-label="Workspace views">
-          {(["design", "compare", "evidence", "activity"] as const).map(
+          {(["permits", "design", "compare", "evidence", "activity"] as const).map(
             (item) => (
               <button
                 key={item}
                 className={tab === item ? "active" : ""}
                 onClick={() => setTab(item)}
               >
-                {item[0].toUpperCase() + item.slice(1)}
+                {item === "permits" ? "Permit desk" : item[0].toUpperCase() + item.slice(1)}
               </button>
             ),
           )}
@@ -343,24 +344,23 @@ export default function App() {
             <Link size={16} />
             <span>{connected ? "Meta connected" : "Connect Meta"}</span>
           </button>
-          <button className="button primary" onClick={exportPacket}>
+          {tab !== "permits" && <button className="button primary" onClick={exportPacket}>
             <FileDown size={16} />
             <span>Export packet</span>
-          </button>
+          </button>}
         </div>
       </header>
       <div className="scope-bar">
         <CircleAlert size={13} />
         <span>
-          Demonstration site <i>·</i> Planning assumptions, not a permit
-          determination.
+          {tab === "permits" ? "Commercial office TI · Fictional corrections case · Applicant coordination, not city approval." : "Residential demonstration site · Planning assumptions, not a permit determination."}
         </span>
-        <button onClick={() => setTab("evidence")}>
+        {tab !== "permits" && <button onClick={() => setTab("evidence")}>
           View scope
           <ArrowRight size={12} />
-        </button>
+        </button>}
       </div>
-      <main className={`workspace view-${tab}`}>
+      {tab === "permits" ? <main className="permit-workspace"><PermitDesk apiKey={apiKey} connected={connected} onConnect={() => setModal(true)} /></main> : <main className={`workspace view-${tab}`}>
         <Inspector
           project={project}
           checks={checks}
@@ -626,7 +626,7 @@ export default function App() {
           }}
           onDismiss={() => setProposal(null)}
         />
-      </main>
+      </main>}
       {notice && (
         <div className="toast" role="status">
           <Check size={16} />

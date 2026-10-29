@@ -33,3 +33,9 @@ Fixed viewport-height expansion, clipped composition, label legibility and geogr
 ## Schema continuation
 
 The user selected the Schema name and decision-layer direction. Added Compare and plan-image intake in the existing design system. Kept diagrammatic source checks separate from demonstration assumptions. Browser verification covered priority change→recommendation→apply, local image selection→connection dialog→return with image preserved, and mobile390×844 plusdesktop1100×720. The1536×1024reference-size editor was also checked when the browser viewport capability became available. Compared layout, typography, palette, spacing, control labels and actual interactive geometry. Schema branding, Compare, image intake and source-linked findings are intentional changes to the original concept.
+
+## Commercial permit desk, October 29
+
+The primary entry is a full-width commercial corrections workspace, separate from the residential scene and rules. It preserves the existing white/olive palette, restrained typography and clear evidence hierarchy. A response matrix is paired with the Meta coordination control and a deterministic handoff assessment. Original numbered comments remain editable with explicit IDs; current excerpt references and applicant review are separate from drafting. The sidebar agent appears first so the main product action is visible on desktop. Mobile uses stacked panels, horizontally scrollable case sections and a compact five-tab navigation.
+
+Verified in the in-app browser at 1100×800 and 390×844: meaningful entry content, no framework overlay or relevant console warning/error, evidence editing, applicant review, stale revision detection, unsupported FPP scope, and HTML packet download. An evidence-linked reviewed item changed the counter to1/3; updating its document fromR2toR3 reset review and flagged the old reference. Authenticated Meta execution of this new commercial loop is still a separate acceptance gate.
