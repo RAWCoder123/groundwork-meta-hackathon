@@ -92,17 +92,32 @@ export async function handleAutonomyApi(request:Request,env:AutoEnvironment,repo
  }catch(error){if(error instanceof RequestError||error instanceof MailError||error instanceof DocumentError)return json({error:error.message},error.status);return json({error:'Schema could not complete this action. Saved project records are preserved.'},500);}
 }
 export async function handleAutonomyMcp(request:Request,env:AutoEnvironment):Promise<Response>{
- // Sites dispatch authenticates this owner-private endpoint, including scheduled service access.
+ // Sites authenticates the caller. A public audience is not cross-project authority.
  if(request.method!=='POST')return json({error:'Method not allowed'},405);
  try{const input=await body(request);const id=input.id??null;const reply=(result:unknown)=>json({jsonrpc:'2.0',id,result});
  if(input.method==='server/discover')return reply({supportedVersions:['2026-07-28'],capabilities:{tools:{}}});
  if(input.method==='initialize')return reply({protocolVersion:'2026-07-28',capabilities:{tools:{}},serverInfo:{name:'Schema project runner',version:'1.0.0'}});
  if(input.method==='notifications/initialized')return new Response(null,{status:202});
- const listing=[{name:'advance_authorized_projects',description:'Advance already-authorized Schema project stages. Stops at approvals, missing evidence and run limits. Never sends messages or submits permits.',inputSchema:{type:'object',properties:{},additionalProperties:false}},{name:'runner_status',description:'Read background runner and integration status without advancing or approving work.',inputSchema:{type:'object',properties:{},additionalProperties:false}}];
+ const listing=[{name:'project_status',description:'Read only your projects and their saved blockers, artifacts and pending checkpoints. Does not advance or approve work.',inputSchema:{type:'object',properties:{},additionalProperties:false}},{name:'retry_saved_work',description:'Retry your blocked project only when explicitly requested. Preserves saved work and budgets; cannot reset limits, approve, send or submit.',inputSchema:{type:'object',properties:{projectId:{type:'string'}},required:['projectId'],additionalProperties:false}},{name:'advance_authorized_projects',description:'Advance already-authorized Schema project stages. Stops at approvals, missing evidence and run limits. Never sends messages or submits permits.',inputSchema:{type:'object',properties:{},additionalProperties:false}},{name:'runner_status',description:'Read background runner and integration status without advancing or approving work.',inputSchema:{type:'object',properties:{},additionalProperties:false}}];
  if(input.method==='tools/list')return reply({tools:listing});
- if(input.method==='tools/call'){const params=input.params as {name?:string;arguments?:unknown};if(!params||!listing.some(t=>t.name===params.name))throw new RequestError(400,'Unknown tool.');if(params.arguments&&Object.keys(params.arguments as object).length)throw new RequestError(400,'This tool accepts no arguments.');if(params.name==='runner_status')return reply({content:[{type:'text',text:JSON.stringify(await integrations(env))}]});
- const result=await pumpBatch(createRepository(env),env);const db=env.DB as D1Database;const state={lastTickAt:iso()};await db.prepare('INSERT INTO auto_runtime (key,value_json,updated_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json,updated_at=excluded.updated_at').bind('background',JSON.stringify(state),iso()).run();
- return reply({content:[{type:'text',text:JSON.stringify({result,...state})}]});}
+ if(input.method==='tools/call'){
+ const userId=owner(request),params=input.params as {name?:string;arguments?:unknown};
+ if(!params||!listing.some(t=>t.name===params.name))throw new RequestError(400,'Unknown tool.');
+ const args=params.arguments??{};
+ if(typeof args!=='object'||args===null||Array.isArray(args))throw new RequestError(400,'Invalid tool arguments.');
+ const values=args as Record<string,unknown>;
+ if(params.name!=='retry_saved_work'&&Object.keys(values).length)throw new RequestError(400,'This tool accepts no arguments.');
+ const content=(value:unknown)=>reply({content:[{type:'text',text:JSON.stringify(value)}]});
+ if(params.name==='runner_status')return content(await integrations(env));
+ const repo=createRepository(env);
+ if(params.name==='project_status')return content({projects:(await repo.listProjects(userId)).map(p=>({id:p.id,title:p.title,version:p.version,status:p.status,stage:p.stage,blockedReason:p.blockedReason,questions:p.questions,documents:p.documents.map(d=>({name:d.name,pages:d.pages,status:d.status,warnings:d.warnings})),artifacts:p.artifacts.map(a=>({kind:a.kind,revision:a.revision,data:a.data})),decisions:p.decisions.filter(d=>d.status==='pending'),events:p.events.slice(-8)}))});
+ if(params.name==='retry_saved_work'){
+ if(Object.keys(values).some(k=>k!=='projectId'))throw new RequestError(400,'Only projectId is accepted.');
+ const project=await owned(repo,string(values.projectId,180),userId);
+ try{const recovered=await recoverExecution(env,project,'retry');return content({projectId:recovered.id,status:recovered.status,version:recovered.version});}catch(error){return reply({isError:true,content:[{type:'text',text:error instanceof Error?error.message:'Saved work could not be retried.'}]});}
+ }
+ const result=await pumpBatch(repo,env,{ownerId:userId});const db=env.DB as D1Database;const state={lastTickAt:iso()};await db.prepare('INSERT INTO auto_runtime (key,value_json,updated_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json,updated_at=excluded.updated_at').bind('background',JSON.stringify(state),iso()).run();
+ return content({result,...state});}
  return json({jsonrpc:'2.0',id,error:{code:-32601,message:'Method not found'}});
- }catch{return json({jsonrpc:'2.0',id:null,error:{code:-32603,message:'The background step could not finish. No approval or external action was inferred.'}},500);}
+ }catch(error){if(error instanceof RequestError)return json({jsonrpc:'2.0',id:null,error:{code:-32600,message:error.message}},error.status);return json({jsonrpc:'2.0',id:null,error:{code:-32603,message:'The background step could not finish. No approval or external action was inferred.'}},500);}
 }

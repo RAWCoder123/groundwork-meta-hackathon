@@ -200,10 +200,11 @@ export async function pumpJobs(repo:Repository,env:AutoEnvironment,limit=2):Prom
 
 /** One authenticated invocation can complete multiple exchanges; persisted leases
  * and stage budgets remain authoritative. A call never approves or sends. */
-export async function pumpBatch(repo:Repository,env:AutoEnvironment,options:{maxSteps?:number;milliseconds?:number;projectId?:string}={}){
+export async function pumpBatch(repo:Repository,env:AutoEnvironment,options:{maxSteps?:number;milliseconds?:number;projectId?:string;ownerId?:string}={}){
  const maxSteps=Math.min(12,Math.max(1,options.maxSteps??8)),deadline=Date.now()+Math.min(45000,Math.max(1,options.milliseconds??25000)),outcomes:AdvanceResult[]=[];
  for(let i=0;i<maxSteps&&Date.now()+21000<deadline;i++){
-  const jobs=(await repo.runnableJobs(100)).filter(j=>!options.projectId||j.projectId===options.projectId);if(!jobs.length)break;
+  const allowed=options.ownerId?new Set((await repo.listProjects(options.ownerId)).map(p=>p.id)):null;
+  const jobs=(await repo.runnableJobs(100)).filter(j=>(!options.projectId||j.projectId===options.projectId)&&(!allowed||allowed.has(j.projectId)));if(!jobs.length)break;
   const result=await advanceJob(repo,env,jobs[0].id,deadline);outcomes.push(result);
   if(result.status==='yielded')break;
   if(result.status==='waiting_provider'){const remaining=deadline-Date.now();if(remaining<24200)break;await new Promise(resolve=>setTimeout(resolve,3000));}

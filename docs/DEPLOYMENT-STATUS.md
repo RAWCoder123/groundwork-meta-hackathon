@@ -1,3 +1,7 @@
+# Current release: version 8
+
+Published October 30, 2026 from `88e47636d2e66e94445e65fbc7dffd43cfc931d3`. Added caller-scoped background execution and saved-work status/retry tools. 195 tests, production build and artifact validation passed. See [production checks](PRODUCTION-CHECKS.md) for direct verification and outstanding acceptance.
+
 # Latest workspace polish — October 30, 2026
 
 Version 7 contains the architectural workspace polish. Runtime source: `0c43e66611284ba027510f14f5e9c85d45f39a41`; tested executable source: `084ca7189619920a641dd21e5893afd5ff169d63`. All 192 tests, the official build and artifact validation passed. Desktop and mobile browser evidence is in `polish-verification.json`.

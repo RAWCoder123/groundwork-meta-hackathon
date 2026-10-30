@@ -1,0 +1,13 @@
+{
+  "version": 8,
+  "runtimeSourceCommit": "88e47636d2e66e94445e65fbc7dffd43cfc931d3",
+  "deploymentId": "appgdep_6ae4dab1ed8c8191bf2f47328b2a878a",
+  "environmentRevision": 7,
+  "testsPassed": 195,
+  "build": "passed",
+  "artifactValidation": "passed",
+  "nativeStatus": "passed; Meta and storage configured",
+  "authenticatedMetaWorkflow": "pending",
+  "browserAcceptance": "waiting for user sign-in",
+  "audience": "public; existing policy preserved"
+}
