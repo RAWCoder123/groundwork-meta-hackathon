@@ -178,3 +178,32 @@ test('the critic kill switch restores the original stage flow',async()=>{
  const {repo,project,job}=await setup();const seen=scripted([...draftUnderstanding],[]);let result;for(let i=0;i<4;i++){repo.due(job.id);result=await advanceJob(repo,{...criticEnv,SCHEMA_CRITIC:'off'},job.id);if(result.status==='needs_approval')break;}
  assert.equal(result!.status,'needs_approval');assert.equal(seen.critic,0);assert.equal((await repo.getProject(project.id))!.critiques,undefined);
 });
+
+test('brief-led projects are not offered the reviewer register and cannot create one',async()=>{
+ const {repo,project,job}=await setup();let tools:string[]=[];globalThis.fetch=async(_url,init)=>{tools=JSON.parse(String(init!.body)).tools.map((t:any)=>t.name).filter(Boolean);return response(done([call('inspect_project'),call('propose_review_register',{comments:[{id:'c1',number:'LS-1',wording:'Provide exit signage.',discipline:'Life safety',responsible:'Architect',parentId:null,source:{documentId:'d',page:1,quote:'Provide exit signage.'},uncertain:false}]})]));};
+ assert.equal((await advanceJob(repo,env,job.id)).status,'advanced');assert.ok(!tools.includes('propose_review_register'));assert.ok(tools.includes('propose_understanding'));
+ const saved=(await repo.getProject(project.id))!;assert.equal(saved.corrections,undefined);assert.equal(saved.status,'running');assert.match(JSON.stringify((await repo.getJob(job.id))!.history.at(-1)),/started from a brief/);
+});
+
+test('an incomplete critic response that still carries its tool call is read, not discarded',async()=>{
+ const {repo,project,job}=await setup();scripted([...draftUnderstanding],[{id:'crit_incomplete',status:'incomplete',output:[{type:'reasoning'},call('record_critique',{findings:[finding('advisory')]})]}]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const saved=(await repo.getProject(project.id))!;assert.equal(saved.critiques![0].status,'clear');assert.equal(saved.critiques![0].findings.length,1);
+});
+
+test('a reply cut off by the output limit before any tool call retries within budget instead of blocking',async()=>{
+ const {repo,project,job}=await setup();const bodies:any[]=[];const replies=[{id:'resp_cut',status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output:[{type:'reasoning'}]},done([call('inspect_project')],'resp_ok')];
+ globalThis.fetch=async(_url,init)=>{bodies.push(JSON.parse(String(init!.body)));return response(replies.shift());};
+ assert.equal((await advanceJob(repo,env,job.id)).status,'advanced');let saved=(await repo.getJob(job.id))!;assert.equal(saved.responseId,undefined);assert.equal(saved.modelRequests,1);assert.match(JSON.stringify(saved.history.at(-1)),/output budget on reasoning/);assert.equal((await repo.getProject(project.id))!.status,'running');
+ repo.due(job.id);assert.equal((await advanceJob(repo,env,job.id)).status,'advanced');saved=(await repo.getJob(job.id))!;assert.equal(saved.modelRequests,2);assert.equal(bodies[0].max_output_tokens,16000);
+});
+
+test('other incomplete replies still stop safely',async()=>{
+ const {repo,project,job}=await setup();globalThis.fetch=async()=>response({id:'resp_filtered',status:'incomplete',incomplete_details:{reason:'content_filter'},output:[]});
+ await advanceJob(repo,env,job.id);assert.equal((await repo.getProject(project.id))!.status,'blocked');
+});
+
+test('the critic sees the user requests and computed geometry checks, not just the brief',async()=>{
+ const {repo,project,job}=await setup();const p=(await repo.getProject(project.id))!;p.messages.push({id:'m_feedback',role:'user',text:'Make the meeting room seat ten next to the entry.',createdAt:new Date().toISOString()});p.version++;await repo.saveProject(p,project.version);job.projectVersion=p.version;await repo.saveJob(job);
+ const seen=scripted([...draftUnderstanding],[done([call('record_critique',{findings:[]})],'crit_ctx')]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const text=seen.criticBodies[0].input[0].content[0].text;assert.match(text,/seat ten next to the entry/);assert.match(text,/"computedGeometryChecks":null/);assert.match(seen.criticBodies[0].instructions,/user's own messages/);
+});
