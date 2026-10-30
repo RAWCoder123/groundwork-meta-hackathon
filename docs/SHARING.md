@@ -1,5 +1,7 @@
 # Sharing this project
 
+For teammate invitations, hosted database access, local setup and schema changes, start with [teammate access and development](TEAM-ACCESS.md). The demo currently requires a Site invitation; the public source alone does not provide one.
+
 The shareable ZIP contains source code, setup instructions, synthetic examples and verification evidence. It does not contain local environment files, API keys, private D1/R2 records, dependencies, or Git authentication state.
 
 ## Review the source
