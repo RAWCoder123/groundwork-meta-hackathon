@@ -70,10 +70,10 @@ test('explicit upload uses fixed Meta Files endpoint and validates the receipt',
  const result=await ingestPdf(f.repo,f.env,f.project,pdf());assert.equal(result.documents[0].metaFileId,'file-123');assert.equal(calls,1);
  await ingestPdf(f.repo,f.env,result,pdf());assert.equal(calls,1);
 });
-test('failed provider upload preserves source with safe failure state and can retry',async()=>{
+test('failed provider upload preserves extracted source for bounded runner retry',async()=>{
  const f=fixture();f.env.MODEL_API_KEY='test-only-meta-key';
  globalThis.fetch=async()=>new Response('secret provider details',{status:302,headers:{location:'https://untrusted.example'}});
- const failed=await ingestPdf(f.repo,f.env,f.project,pdf());assert.equal(failed.status,'blocked');assert.equal(failed.documents[0].status,'failed');assert.equal(failed.documents[0].metaFileId,undefined);assert.ok(!JSON.stringify(failed).includes('secret provider details'));
+ const failed=await ingestPdf(f.repo,f.env,f.project,pdf());assert.equal(failed.status,'running');assert.equal(failed.documents[0].status,'processed');assert.equal(failed.documents[0].metaFileId,undefined);assert.ok(!JSON.stringify(failed).includes('secret provider details'));
  globalThis.fetch=async()=>Response.json({id:'file-retried'});
  const result=await ensureMetaFile(f.repo,f.env,failed,failed.documents[0].id);assert.equal(result.documents[0].metaFileId,'file-retried');assert.equal(result.status,'running');
 });

@@ -6,7 +6,7 @@ export interface D1Statement {
   all<T = Record<string, unknown>>(): Promise<{ results: T[] }>;
   run(): Promise<{ meta?: { changes?: number } }>;
 }
-export interface D1Database { prepare(sql: string): D1Statement }
+export interface D1Database { prepare(sql: string): D1Statement; batch?(statements:D1Statement[]):Promise<{meta?:{changes?:number}}[]> }
 type StateRow = { state_json: string };
 type JobRow = StateRow & { lease_token: string | null; lease_until: number | null };
 
@@ -42,7 +42,7 @@ function decodeJob(row: JobRow | null): StageJob | null {
 /** Private immutable recovery snapshots include each generated artifact revision.
  * The D1 compare-and-swap remains authoritative; a losing write may leave an
  * unreferenced private snapshot, never an approved or current project record. */
-async function archiveProject(env:AutoEnvironment,project:AutoProject,state:string){
+export async function archiveProject(env:AutoEnvironment,project:AutoProject,state:string){
  const bucket=env.BUCKET as {put(key:string,value:string,options:unknown):Promise<unknown>}|undefined;
  if(!bucket)return; // Database-only unit harnesses; production declares BUCKET.
  if(typeof bucket.put!=='function')throw new Error('Versioned artifact storage is unavailable. No project change was committed.');

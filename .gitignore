@@ -14,3 +14,5 @@ work/
 .dev.vars*
 *.tsbuildinfo
 next-env.d.ts
+
+evaluations/private/

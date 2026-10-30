@@ -20,6 +20,8 @@ Show one fictional Portland office fit-out progressing from a brief and PDF thro
 
 Use real Meta results only after an authenticated run succeeds. If email remains unavailable, show the accurately blocked draft and identify delivery as an unfinished integration. Controlled-provider responses belong in the test report, not a recording presented as live inference.
 
+The corrections entry point preserves an existing design and does not force a new concept. Include the explicit register-confirmation and response-review steps in the recording. Use the intentionally incomplete local fixture to demonstrate duplicate numbering, a missing response, absent support and a replaced drawing. Keep this controlled fixture separate from the real Meta run.
+
 ## Event-created contribution record
 
 Development began October 27, 2026. Use the actual public Git history and tested commit in the submission. Original application work includes:

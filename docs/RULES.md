@@ -1,3 +1,5 @@
+> Legacy residential study only. These rules are not commercial requirements. See [current scope](SCOPE.md) for the commercial workflow.
+
 # Groundwork rule scope
 
 Groundwork has two distinct layers: the original **demonstration geometry engine** and a **small source-derived Portland comparison module**. The original six rules remain `kind: 'demonstration'`; they have not been relabeled as city standards. In `portland.ts`, `kind: 'verified'` means the threshold was traced to an official source, **not** that a parcel, legal interpretation, measurement, design or permit has been verified.

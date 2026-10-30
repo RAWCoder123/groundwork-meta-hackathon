@@ -1,3 +1,5 @@
+import {pumpBatch} from '../server/autonomy/runner';
+import {createRepository} from '../server/autonomy/repository';
 import handler from "vinext/server/fetch-handler";
 import { runWithConnectorBinding } from "../lib/connector-context";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
@@ -11,7 +13,16 @@ const worker = {
   fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
     const path = new URL(request.url).pathname;
     const runtime = env as unknown as AutoEnvironment;
-    if (path.startsWith("/api/autonomy/")) return handleAutonomyApi(request, runtime);
+    if (path.startsWith("/api/autonomy/")) {
+      const response=handleAutonomyApi(request,runtime);
+      // A request starts a short server-owned batch; closing the tab does not
+      // cancel it. Durable recurrence is a separate authenticated cloud runner.
+      if(request.method==='POST'&&!path.endsWith('/advance'))return response.then(async result=>{
+        if(result.ok){try{const data=await result.clone().json() as {project?:{id:string;status:string}};if(data.project?.status==='running')ctx.waitUntil(pumpBatch(createRepository(runtime),runtime,{projectId:data.project.id,maxSteps:6,milliseconds:25000}).catch(()=>console.warn('Schema background batch was interrupted; its durable queue remains available for reconciliation.')));}catch{/* The durable queue and visible errors remain authoritative. */}}
+        return result;
+      });
+      return response;
+    }
     if (path === "/mcp") return handleAutonomyMcp(request, runtime);
     const legacyEnv = { MODEL_API_KEY: typeof runtime.MODEL_API_KEY === "string" ? runtime.MODEL_API_KEY : undefined };
     if (path === "/api/intake") return handleIntake(request, legacyEnv);

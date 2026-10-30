@@ -1,15 +1,20 @@
-# Hosted status — October 29, 2026
+# Hosted status — October 30, 2026
 
-The autonomous runtime was published as private Site version 5 from source commit `b38e2e9ec3ae0192766e089bc90692de8cf6626f`.
+The existing owner-private Site is https://groundwork-adus.raymondaw2006.chatgpt.site/. Public source is https://github.com/RAWCoder123/groundwork-meta-hackathon. Publication preserves the Site identity, audience, D1/R2 bindings and legacy route. Version 6 deployed successfully on October 30, 2026. Runtime source commit: `dfb52ff03aa2af2ab01022de342d1d94f5170878`; tested executable source: `3d5878aa711a82e50252c678b5e41a082a44dbb3`. The difference is the documentation-only verification record. The share package records this public documentation commit separately.
 
-- Site publication succeeded at https://groundwork-adus.raymondaw2006.chatgpt.site/.
-- Private service access returned HTTP 200 with the new workspace rendered.
-- Native database inspection confirmed all five tables: `auto_projects`, `auto_jobs`, `auto_preferences`, `auto_receipts` and `auto_runtime`.
-- The public repository is https://github.com/RAWCoder123/groundwork-meta-hackathon. Anonymous GitHub API access returned HTTP 200 and `private: false`.
-- No hosted `MODEL_API_KEY` has been configured; authenticated Meta processing remains unverified.
-- The Site's MCP plugin was provisioned and reported already installed. The author's private HTTP service token could read the page but received HTTP 401 from `/mcp`; that token alone does not prove the MCP connection or future cloud-task authorization.
-- A native five-minute schedule was attempted and **rejected**: the scheduler permits at most one run per hour. No schedule was created and no background-verified flag was set. An hourly substitution would not meet the approved five-minute design or establish timely stage progress.
-- Gmail eligibility/consent and a real native adapter remain unavailable. No actual message was sent.
-- Browser authentication of a fresh hosted tab stopped at the sign-in/security verification flow. Hosted owner-session project creation and cross-device readback remain separate acceptance work; local/browser and built-Worker tests are documented in `VERIFICATION.md`.
+## Direct observations
 
-The source is shareable; these deployment constraints remain explicit. To finish live acceptance, configure the Meta runtime key privately, resolve a supported authenticated cloud runner with the required cadence, verify closed-tab document/tool/revision work and establish eligible email coordination. Municipal submission, professional sign-off and physical completion remain external evidence.
+- Native MCP `runner_status` and `advance_authorized_projects` now succeed through the connected Schema plugin. The earlier service-token HTTP 401 did not establish that the OAuth MCP connection was unavailable.
+- The five durable tables are present in the hosted D1 binding.
+- The native schedule `Continue Schema project work` is enabled hourly. Its first requested start was October 30 at 1:50 AM Eastern. The platform rejects schedules more frequent than hourly.
+- A later persisted heartbeat at 1:54 AM Eastern is consistent with a scheduled contact. It does not prove model progress or identify a completed authorized stage.
+- Environment revision 1 is applied in version 6. Hosted MCP reports background configured, background verified false, storage ready, and Meta not configured.
+- The private local Meta configuration remains empty and the hosted Meta key has not been configured. Authenticated Meta acceptance is pending.
+
+## Remaining acceptance
+
+Run a fresh authorized stage with its PDFs and a real Meta credential; close the workspace, observe actual document/tool/artifact advancement and read it back after reopening. Exercise a requested revision, stale approvals, reviewed release and matching export. A heartbeat cannot substitute for this test.
+
+The post-deployment hosted browser check reached the owner sign-in security-verification page and did not complete sign-in. Complete owner-session testing before claiming hosted browser acceptance. Judge access remains pending explicit sharing authorization; this work does not change the audience.
+
+The mail-service interface has controlled tests, but a native Sites Gmail adapter, eligibility and consent have not been established. No live email or municipal submission occurred. Practitioner validation and the final three-minute recording remain unfinished.

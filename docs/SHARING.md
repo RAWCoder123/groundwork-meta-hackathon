@@ -20,6 +20,6 @@ Repeat for later unapplied SQL files, including `0001_panoramic_blue_blade.sql`.
 
 The live development Site is private; sharing this archive does not grant access to it. A new owner should create a separate Site using the supported Sites workflow, replace `.openai/hosting.json`'s project identity with their newly returned ID, and preserve the `DB`, `BUCKET`, and MCP declarations. Do not publish a fork over the original Site.
 
-Configure hosted `MODEL_API_KEY` as a runtime secret. A browser tab key or local `.dev.vars` is not hosted configuration. Set up the five-minute cloud runner only after verifying the published MCP writer's authorized access. Test that a fresh unattended run advances a real authorized stage before marking background execution verified.
+Configure hosted `MODEL_API_KEY` as a runtime secret. A browser tab key or local `.dev.vars` is not hosted configuration. The current native cloud runner is hourly; the platform rejected a five-minute schedule. Verify the published MCP writer's authenticated access and saved progress. Test that a fresh unattended run advances a real authorized stage before marking background execution verified.
 
 Email sending remains unavailable unless native eligibility, account consent and a real hosting adapter are verified. Use only synthetic or authorized project files. Municipal submission, professional sign-off, permit issuance and physical construction are separate externally verified outcomes.

@@ -1,0 +1,357 @@
+{
+  "project": {
+    "schemaVersion": 1,
+    "id": "fictional-correction-evaluation",
+    "ownerId": "fictional-evaluator",
+    "version": 9,
+    "title": "CONTROLLED TEST — revisions and coverage",
+    "brief": "CONTROLLED TEST - fictional Portland corrections with duplicate numbering, an omitted response, missing evidence, and a revised drawing. No live Meta or practitioner result is represented.",
+    "stage": "preparation",
+    "status": "needs_input",
+    "createdAt": "2026-10-30T06:33:39.437Z",
+    "updatedAt": "2026-10-30T06:33:39.440Z",
+    "documents": [
+      {
+        "id": "document_f6b2a2e6-a41f-43bf-9313-b22ffe24ccae",
+        "name": "fictional-checksheet.pdf",
+        "objectKey": "examples/fictional-checksheet.pdf",
+        "sha256": "477e62a383db2aa27eaf6513b740d8d76fef7c1c0af3169b1a96cf6a68e70427",
+        "bytes": 888,
+        "pages": 1,
+        "status": "processed",
+        "excerpts": [
+          {
+            "page": 1,
+            "text": "CONTROLLED FICTIONAL CHECKSHEET - NO REAL CITY REVIEW Building 1: Identify existing partitions. Building 3(a): Show the accessible route and door clearances. Fire 1: Coordinate fire alarm documentation. Duplicate numbering and nested numbering are intentional test inputs."
+          }
+        ],
+        "warnings": [
+          "Original and text excerpts saved. A server-side Meta key is required to upload this PDF for model document processing."
+        ],
+        "createdAt": "2026-10-30T05:53:05.606Z"
+      },
+      {
+        "id": "document_32fb7d1c-9fd5-4846-a924-fb9eea3af5f3",
+        "name": "fictional-drawing-R1.pdf",
+        "objectKey": "examples/fictional-drawing-R1.pdf",
+        "sha256": "e2846027a6e427a41f37bb7f0292dd1ee84c79ceccb72adbb179a397a2a3d053",
+        "bytes": 761,
+        "pages": 1,
+        "status": "processed",
+        "excerpts": [
+          {
+            "page": 1,
+            "text": "CONTROLLED FICTIONAL DRAWING R1 - TEXT TEST INPUT ONLY Existing partitions are dashed. No professionally prepared drawings or technical compliance are established."
+          }
+        ],
+        "warnings": [
+          "Original and text excerpts saved. A server-side Meta key is required to upload this PDF for model document processing."
+        ],
+        "createdAt": "2026-10-30T05:53:05.621Z",
+        "supersededBy": "document_aace9a89-0657-465d-bb9f-1e44c31a8a7a"
+      },
+      {
+        "id": "document_aace9a89-0657-465d-bb9f-1e44c31a8a7a",
+        "name": "fictional-drawing-R2.pdf",
+        "objectKey": "examples/fictional-drawing-R2.pdf",
+        "sha256": "17b49b817ce57c956203c0d1aa0e8427e8f3666b5f9ba0284256df8d77966942",
+        "bytes": 771,
+        "pages": 1,
+        "status": "processed",
+        "excerpts": [
+          {
+            "page": 1,
+            "text": "CONTROLLED FICTIONAL DRAWING R2 - TEXT TEST INPUT ONLY Partition locations changed; reassess the previous response. Accessible route and fire alarm design remain unresolved."
+          }
+        ],
+        "warnings": [
+          "Original and text excerpts saved. A server-side Meta key is required to upload this PDF for model document processing."
+        ],
+        "createdAt": "2026-10-30T05:53:05.631Z",
+        "seriesId": "document_32fb7d1c-9fd5-4846-a924-fb9eea3af5f3",
+        "revision": 2
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "understanding",
+        "kind": "understanding",
+        "revision": 1,
+        "title": "Project understanding",
+        "data": {
+          "summary": "Controlled fictional correction coordination. Existing scope and legal status remain unverified."
+        },
+        "dependsOn": {},
+        "sources": [],
+        "createdAt": "2026-10-30T06:33:39.438Z"
+      },
+      {
+        "id": "preparation",
+        "kind": "preparation",
+        "revision": 1,
+        "title": "Prepared responses and coordination",
+        "data": {
+          "summary": "A controlled test intentionally retaining unresolved work.",
+          "responses": [
+            {
+              "itemId": "5da0cd03-df4e-46ac-bfd3-c48477bab11d",
+              "comment": "Identify existing partitions.",
+              "response": "Existing partitions are shown dashed in the R1 test source; professional drawings remain missing.",
+              "evidence": [
+                {
+                  "documentId": "document_32fb7d1c-9fd5-4846-a924-fb9eea3af5f3",
+                  "revision": 1,
+                  "sha256": "e2846027a6e427a41f37bb7f0292dd1ee84c79ceccb72adbb179a397a2a3d053",
+                  "page": 1,
+                  "quote": "Existing partitions are dashed."
+                }
+              ],
+              "missing": [
+                "Professional drawings and review."
+              ],
+              "conceptRevision": null
+            },
+            {
+              "itemId": "03f4caeb-4e80-4718-83c3-638e59300a5d",
+              "comment": "Show the accessible route and door clearances.",
+              "response": "Accessibility documentation remains outstanding.",
+              "evidence": [],
+              "missing": [
+                "Accessible route and door clearance evidence."
+              ],
+              "conceptRevision": null
+            }
+          ]
+        },
+        "dependsOn": {
+          "understanding": 1
+        },
+        "sources": [],
+        "createdAt": "2026-10-30T06:33:39.439Z"
+      }
+    ],
+    "decisions": [
+      {
+        "id": "decision_cae39776-054f-4f5b-8b49-0d066f5de08f",
+        "kind": "understanding",
+        "status": "approved",
+        "title": "Confirm the project understanding",
+        "summary": "Review the current proposal and assumptions. Give feedback to request a revision.",
+        "artifactVersions": {
+          "understanding": 1
+        },
+        "createdAt": "2026-10-30T06:33:39.438Z",
+        "decidedAt": "2026-10-30T06:33:39.439Z"
+      }
+    ],
+    "tasks": [
+      {
+        "id": "task_understanding",
+        "stage": "understanding",
+        "title": "Read the brief and project files",
+        "status": "done",
+        "detail": "Agent work recorded; approval and external evidence remain separate."
+      },
+      {
+        "id": "task_design",
+        "stage": "design",
+        "title": "Develop the commercial concept and permit route",
+        "status": "queued",
+        "detail": "Awaiting agent work; no result has been generated."
+      },
+      {
+        "id": "task_preparation",
+        "stage": "preparation",
+        "title": "Coordinate evidence and prepare responses",
+        "status": "working",
+        "detail": "Awaiting agent work; no result has been generated."
+      },
+      {
+        "id": "task_handoff",
+        "stage": "handoff",
+        "title": "Assemble the reviewed handoff",
+        "status": "queued",
+        "detail": "Awaiting agent work; no result has been generated."
+      }
+    ],
+    "messages": [
+      {
+        "id": "message_2627974f-01ac-49d5-8229-5eb5eaaa872d",
+        "role": "user",
+        "text": "CONTROLLED TEST - fictional Portland corrections with duplicate numbering, an omitted response, missing evidence, and a revised drawing. No live Meta or practitioner result is represented.",
+        "createdAt": "2026-10-30T06:33:39.437Z"
+      }
+    ],
+    "events": [
+      {
+        "id": "event_b728fe85-4a75-4329-a940-4b435d441b8c",
+        "type": "project_created",
+        "detail": "Project brief received. Agent work is queued; no design, permit status or external action is assumed.",
+        "createdAt": "2026-10-30T06:33:39.437Z"
+      },
+      {
+        "id": "222d99f8-debb-4bbf-8cec-46d140a0b205",
+        "type": "register_drafted",
+        "detail": "Review the extracted register; confidence does not establish completeness.",
+        "createdAt": "2026-10-30T06:33:39.438Z"
+      },
+      {
+        "id": "df5d156f-3160-43f6-bb30-3fe0ec14168e",
+        "type": "register_confirmed",
+        "detail": "The user confirmed the current comment register.",
+        "createdAt": "2026-10-30T06:33:39.438Z"
+      },
+      {
+        "id": "event_ef5b98f0-ca5f-4730-aad2-f562d305fe3f",
+        "type": "artifact_updated",
+        "detail": "Project understanding revision 1 saved. Dependent approvals require renewed review.",
+        "createdAt": "2026-10-30T06:33:39.438Z"
+      },
+      {
+        "id": "event_7a72c6a6-2791-47f7-9cee-7f4b4a5d2676",
+        "type": "approval_requested",
+        "detail": "A understanding checkpoint is ready for review of these exact artifact revisions.",
+        "createdAt": "2026-10-30T06:33:39.438Z"
+      },
+      {
+        "id": "event_91a7a89f-3932-47df-b635-e6322eab4360",
+        "type": "checkpoint_approved",
+        "detail": "Confirm the project understanding: approved. External actions remain separately authorized.",
+        "createdAt": "2026-10-30T06:33:39.439Z"
+      },
+      {
+        "id": "event_4c08f4db-84f5-44b7-981d-f48f635f3258",
+        "type": "artifact_updated",
+        "detail": "Prepared responses and coordination revision 1 saved. Dependent approvals require renewed review.",
+        "createdAt": "2026-10-30T06:33:39.439Z"
+      },
+      {
+        "id": "30ff9613-6e6e-40b4-b0d0-17ecfb5dc773",
+        "type": "response_reviewed",
+        "detail": "The user reviewed one exact response and its evidence; city acceptance is not inferred.",
+        "createdAt": "2026-10-30T06:33:39.440Z"
+      },
+      {
+        "id": "ae428c65-66ae-4d87-b75f-2e356521fd50",
+        "type": "source_replaced",
+        "detail": "Document revision 1 replaced by 2. Historical evidence is retained; affected response reviews require renewal.",
+        "createdAt": "2026-10-30T06:33:39.440Z"
+      }
+    ],
+    "mail": [],
+    "questions": [
+      "Inspect the deliberately unresolved controlled test. No Meta generation, practitioner review or city acceptance occurred."
+    ],
+    "recipient": null,
+    "inboxStatus": "not_connected",
+    "entryPoint": "corrections",
+    "corrections": {
+      "revision": 1,
+      "confirmedRevision": 1,
+      "comments": [
+        {
+          "id": "5da0cd03-df4e-46ac-bfd3-c48477bab11d",
+          "number": "1",
+          "wording": "Identify existing partitions.",
+          "discipline": "Building",
+          "responsible": "",
+          "parentId": null,
+          "source": {
+            "documentId": "document_f6b2a2e6-a41f-43bf-9313-b22ffe24ccae",
+            "revision": 1,
+            "sha256": "477e62a383db2aa27eaf6513b740d8d76fef7c1c0af3169b1a96cf6a68e70427",
+            "page": 1,
+            "quote": "Identify existing partitions."
+          },
+          "uncertain": false
+        },
+        {
+          "id": "03f4caeb-4e80-4718-83c3-638e59300a5d",
+          "number": "3(a)",
+          "wording": "Show the accessible route and door clearances.",
+          "discipline": "Building",
+          "responsible": "",
+          "parentId": null,
+          "source": {
+            "documentId": "document_f6b2a2e6-a41f-43bf-9313-b22ffe24ccae",
+            "revision": 1,
+            "sha256": "477e62a383db2aa27eaf6513b740d8d76fef7c1c0af3169b1a96cf6a68e70427",
+            "page": 1,
+            "quote": "Show the accessible route and door clearances."
+          },
+          "uncertain": false
+        },
+        {
+          "id": "41d9049b-2a87-4dce-9ae9-5cf999228fbc",
+          "number": "1",
+          "wording": "Coordinate fire alarm documentation.",
+          "discipline": "Fire",
+          "responsible": "",
+          "parentId": null,
+          "source": {
+            "documentId": "document_f6b2a2e6-a41f-43bf-9313-b22ffe24ccae",
+            "revision": 1,
+            "sha256": "477e62a383db2aa27eaf6513b740d8d76fef7c1c0af3169b1a96cf6a68e70427",
+            "page": 1,
+            "quote": "Coordinate fire alarm documentation."
+          },
+          "uncertain": false
+        }
+      ],
+      "reviews": [
+        {
+          "commentId": "5da0cd03-df4e-46ac-bfd3-c48477bab11d",
+          "fingerprint": "2e83398c707548cc74aef39d902a0d9f2ec073517dcac21edaf210610f0b21f8",
+          "reviewedAt": "2026-10-30T06:33:39.440Z",
+          "supportConfirmed": true,
+          "note": "Controlled test actor reviewed R1 before replacement; no practitioner acceptance."
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-10-30T06:33:39.438Z",
+          "action": "register_drafted",
+          "revision": 1,
+          "detail": "Original numbering retained. Human completeness review is required."
+        },
+        {
+          "at": "2026-10-30T06:33:39.438Z",
+          "action": "register_confirmed",
+          "revision": 1,
+          "detail": "User confirmed this register version; unread pages remain separate."
+        }
+      ]
+    }
+  },
+  "evaluation": {
+    "fixture": true,
+    "practitionerWillingnessToReuse": null,
+    "practitionerConfirmedSemanticErrors": null,
+    "manualBaselineMinutes": null,
+    "applicantPreparationMinutes": null,
+    "humanReviewMinutes": null,
+    "groundTruth": [
+      {
+        "number": "1",
+        "discipline": "Building",
+        "page": 1,
+        "documentSha256": "477e62a383db2aa27eaf6513b740d8d76fef7c1c0af3169b1a96cf6a68e70427",
+        "wording": "Identify existing partitions."
+      },
+      {
+        "number": "3(a)",
+        "discipline": "Building",
+        "page": 1,
+        "documentSha256": "477e62a383db2aa27eaf6513b740d8d76fef7c1c0af3169b1a96cf6a68e70427",
+        "wording": "Show the accessible route and door clearances."
+      },
+      {
+        "number": "1",
+        "discipline": "Fire",
+        "page": 1,
+        "documentSha256": "477e62a383db2aa27eaf6513b740d8d76fef7c1c0af3169b1a96cf6a68e70427",
+        "wording": "Coordinate fire alarm documentation."
+      }
+    ]
+  }
+}

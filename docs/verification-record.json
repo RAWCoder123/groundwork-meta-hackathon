@@ -1,0 +1,123 @@
+{
+  "recordedAt": "2026-10-30T06:44:30.789256+00:00",
+  "testedRuntimeCommit": "3d5878aa711a82e50252c678b5e41a082a44dbb3",
+  "subsequentChanges": "Documentation-only verification and deployment records may follow this commit.",
+  "checks": [
+    {
+      "command": "npm test",
+      "result": "passed",
+      "tests": 188,
+      "failed": 0,
+      "class": "controlled software acceptance"
+    },
+    {
+      "command": "npm run build",
+      "result": "passed",
+      "class": "TypeScript and production Vinext Worker build"
+    },
+    {
+      "command": "npm run validate",
+      "result": "passed",
+      "class": "Worker parse, Site identity, D1/R2 and migration packaging"
+    },
+    {
+      "command": "npm run evaluate:corrections -- examples/fictional-corrections.json",
+      "result": "passed",
+      "class": "fictional evaluation",
+      "observed": {
+        "responses": 2,
+        "comments": 3,
+        "omissions": 1,
+        "outdatedReferences": 1,
+        "unresolvedItems": 3,
+        "submissionReady": false,
+        "practitionerMetrics": null
+      }
+    },
+    {
+      "check": "Built Worker local HTTP smoke",
+      "result": "passed",
+      "observed": {
+        "root": 200,
+        "legacy": 200,
+        "createProject": 201,
+        "ownerRead": 200,
+        "otherOwnerRead": 404,
+        "handoff": 200,
+        "entryPoint": "corrections",
+        "missingMetaStatus": "blocked"
+      }
+    },
+    {
+      "check": "Local browser controlled fixture",
+      "result": "passed",
+      "observed": [
+        "register edit and confirmation",
+        "exact response review",
+        "visible omitted item, repeated numbering, absent support and historical drawing",
+        "three protected original PDFs matched stored SHA-256",
+        "downloaded handoff matched project revision 9"
+      ],
+      "viewport": {
+        "width": 1280,
+        "contentWidth": 1280,
+        "mobileVerified": false
+      },
+      "image": "corrections-controlled-ui.png"
+    },
+    {
+      "check": "Impeccable mechanical scan of changed interface files",
+      "result": "no findings",
+      "limitation": "Not a complete accessibility audit."
+    },
+    {
+      "check": "Native hosted Schema MCP",
+      "result": "status and advance tools succeeded",
+      "limitation": "No authenticated model execution."
+    },
+    {
+      "check": "Native schedule",
+      "result": "enabled hourly",
+      "id": "Automation_427317dfd650819190d53a8b7c024399",
+      "observedHeartbeat": "2026-10-30T05:54:32.497Z",
+      "limitation": "Heartbeat does not demonstrate meaningful closed-tab model progress."
+    }
+  ],
+  "acceptance": {
+    "controlledDocumentToolsRevisionReviewExport": "passed",
+    "registerCompletenessAndRevisionDependencies": "passed controlled and local",
+    "pauseSavedRecoveryAndNewBoundedAttempt": "passed controlled",
+    "linkedConceptViewsAndChanges": "passed controlled/local fixtures",
+    "authenticatedHostedMetaWorkflow": "blocked: fresh private runtime key not configured",
+    "meaningfulClosedTabAdvancement": "pending: real authorized Meta stage and readback",
+    "nativeGmailDelivery": "blocked: native adapter, eligibility and consent not established",
+    "judgeAccess": "pending: sharing authorization and signed-in judge check",
+    "practitionerValue": "pending: practitioner and authorized historical package",
+    "finalThreeMinuteVideo": "pending"
+  },
+  "claimsExcluded": [
+    "production readiness",
+    "time savings",
+    "city acceptance",
+    "permit issuance",
+    "professional certification",
+    "physical construction"
+  ],
+  "hostedPublication": {
+    "date": "2026-10-30",
+    "version": 6,
+    "runtimeSourceCommit": "dfb52ff03aa2af2ab01022de342d1d94f5170878",
+    "status": "succeeded",
+    "deploymentId": "appgdep_6ae43cf2ef388191b7ec7c0b0e104ff1",
+    "environmentRevision": 1,
+    "audience": "owner-private; unchanged",
+    "observedMcpStatus": {
+      "storageReady": true,
+      "metaConfigured": false,
+      "backgroundConfigured": true,
+      "backgroundVerified": false,
+      "gmailEligible": false
+    },
+    "browserOwnerAcceptance": "blocked at sign-in security verification"
+  }
+}

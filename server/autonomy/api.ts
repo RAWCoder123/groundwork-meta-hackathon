@@ -1,8 +1,10 @@
+import {recoverExecution} from './recovery';
+import {proposeRegister,confirmRegister,reviewResponse,replaceDocument,assessCorrections,responseRows,responseFingerprint} from '../../src/autonomy/corrections';
 import { applyDecision, applyFeedback, buildAutonomousPacket, createAutoProject, createStageJob, putArtifact, validateProject } from '../../src/autonomy/domain';
 import { validateOfficeConcept } from '../../src/autonomy/concept';
 import type { AutoEnvironment, AutoProject, IntegrationStatus, Preference, Repository } from '../../src/autonomy/types';
 import { createRepository, type D1Database } from './repository';
-import { advanceJob, pumpJobs } from './runner';
+import { advanceJob, pumpJobs, pumpBatch } from './runner';
 import { ingestPdf, DocumentError } from './documents';
 import { approveAndSend, mailIntegrationStatus, prepareMailAction, refreshInbox, MailError, type MailAdapter } from './mail';
 const iso=()=>new Date().toISOString();
@@ -27,15 +29,20 @@ export async function handleAutonomyApi(request:Request,env:AutoEnvironment,repo
  const repo=repository??createRepository(env);
  if(path==='/api/autonomy/state'&&request.method==='GET')return json({projects:await repo.listProjects(userId),preferences:(await repo.getPreferences(userId)).filter(p=>!p.deletedAt),integrations:await integrations(env)});
  if(path==='/api/autonomy/projects'&&request.method==='POST'){
- const data=await body(request);const project=createAutoProject(userId,string(data.brief,12000));await repo.createProject(project);await queue(repo,project);return json({project},201);
+ const data=await body(request);const project=createAutoProject(userId,string(data.brief,12000));if(data.entryPoint!==undefined&&!['brief','corrections'].includes(String(data.entryPoint)))throw new RequestError(400,'Choose a project entry point.');project.entryPoint=data.entryPoint==='corrections'?'corrections':'brief';if(project.entryPoint==='corrections'){const task=project.tasks.find(t=>t.stage==='design')!;task.title='Optional concept design';task.detail='Existing-project corrections can proceed without a new concept. Design is developed only when requested.';}await repo.createProject(project);await queue(repo,project);return json({project},201);
  }
  const pref=path.match(/^\/api\/autonomy\/preferences\/([^/]+)$/);
  if(pref){const p=(await repo.getPreferences(userId)).find(v=>v.id===pref[1]&&!v.deletedAt);if(!p)throw new RequestError(404,'Preference not found.');if(request.method==='DELETE'){await repo.putPreference({...p,text:'',status:'disabled',deletedAt:iso(),updatedAt:iso()});return new Response(null,{status:204});}if(request.method==='POST'){const data=await body(request);const next:Preference={...p,updatedAt:iso(),userEdited:true};if(data.text!==undefined)next.text=string(data.text,1000);if(data.status!==undefined){if(!['active','disabled','provisional'].includes(String(data.status)))throw new RequestError(400,'Unsupported preference status.');next.status=data.status as Preference['status'];}await repo.putPreference(next);return json({preference:next});}throw new RequestError(405,'Method not allowed.');}
  const match=path.match(/^\/api\/autonomy\/projects\/([^/]+)(?:\/(.*))?$/);if(!match)throw new RequestError(404,'Route not found.');
  let project=await owned(repo,match[1],userId);const action=match[2]??'';
- if(!action&&request.method==='GET')return json({project,preferences:(await repo.getPreferences(userId)).filter(p=>!p.deletedAt),integrations:await integrations(env)});
+ if(!action&&request.method==='GET')return json({project,correctionAssessment:assessCorrections(project),preferences:(await repo.getPreferences(userId)).filter(p=>!p.deletedAt),integrations:await integrations(env)});
+ const originalPdf=action.match(/^documents\/([^/]+)\/file$/);
+ if(originalPdf&&request.method==='GET'){
+ const doc=project.documents.find(d=>d.id===originalPdf[1]);if(!doc)throw new RequestError(404,'Document not found.');
+ const bucket=env.BUCKET as {get(key:string):Promise<{arrayBuffer():Promise<ArrayBuffer>}|null>};const stored=await bucket.get(doc.objectKey);if(!stored)throw new RequestError(404,'The original source file is unavailable.');const bytes=await stored.arrayBuffer();const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');if(digest!==doc.sha256)throw new RequestError(409,'The stored file does not match its immutable source record.');return new Response(bytes,{headers:{'Content-Type':'application/pdf','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Content-Disposition':`inline; filename*=UTF-8''${encodeURIComponent(doc.name)}`}});
+ }
  if(action==='packet'&&request.method==='GET')return new Response(buildAutonomousPacket(project),{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','Content-Disposition':'attachment; filename="schema-project-handoff.html"','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'"}});
- if(action==='bundle'&&request.method==='GET')return json({project,preferences:(await repo.getPreferences(userId)).filter(p=>!p.deletedAt&&(p.projectId===project.id||p.scope==='reusable'))});
+ if(action==='bundle'&&request.method==='GET')return json({project,correctionAssessment:assessCorrections(project),preferences:(await repo.getPreferences(userId)).filter(p=>!p.deletedAt&&(p.projectId===project.id||p.scope==='reusable'))});
  if(request.method!=='POST')throw new RequestError(405,'Method not allowed.');
  if(action==='documents'){
  const contentLength=Number(request.headers.get('content-length')||0);if(contentLength>10*1024*1024+100000)throw new RequestError(413,'PDF files must be no larger than 10 MB.');
@@ -51,6 +58,16 @@ export async function handleAutonomyApi(request:Request,env:AutoEnvironment,repo
  }
  if(action==='inbox-refresh'){project=await refreshInbox(repo,project,mailIntegrationStatus(env).connected?env.SCHEMA_GMAIL_ADAPTER as MailAdapter:undefined);return json({project});}
  const data=await body(request);
+ if(['review-register','confirm-register','review-response','replace-document'].includes(action)){
+ let next:AutoProject;try{
+ if(action==='review-register'){if(data.registerRevision!==(project.corrections?.revision??0))throw new Error('The register changed while you were editing. Reload it before saving.');next=proposeRegister(project,data.comments);}
+ else if(action==='confirm-register'){next=confirmRegister(project,Number(data.revision));if(project.status==='needs_input'&&!project.questions.length)next.status='running';}
+ else if(action==='review-response'){const row=responseRows(project).find(r=>r.itemId===data.commentId);if(!row||data.fingerprint!==responseFingerprint(project,row))throw new Error('The response or its evidence changed. Review the current version.');next=reviewResponse(project,string(data.commentId,180),data.supportConfirmed===true,typeof data.note==='string'?data.note:'');}
+ else next=replaceDocument(project,string(data.oldId,180),string(data.newId,180));
+ }catch(error){throw new RequestError(400,error instanceof Error?error.message:'The correction change could not be validated.');}
+ project=await save(repo,project,next);if(action!=='review-register')await queue(repo,project);return json({project,correctionAssessment:assessCorrections(project)});
+ }
+ if(action==='recover'){if(data.mode!=='retry'&&data.mode!=='new_attempt')throw new RequestError(400,'Choose saved-run recovery or a new bounded attempt.');try{project=await recoverExecution(env,project,data.mode);}catch(error){throw new RequestError(409,error instanceof Error?error.message:'Recovery did not complete.');}return json({project});}
  if(action==='message'){const next=applyFeedback(project,string(data.text,8000));project=await save(repo,project,next);await queue(repo,project);return json({project});}
  if(action==='recipient'){const name=typeof data.name==='string'?data.name.trim().slice(0,200):'',email=string(data.email,254);if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new RequestError(400,'Enter a valid project recipient address.');const next=edit(project,'recipient_selected','The user selected a project recipient. No message has been sent.');next.recipient={name,email};for(const mail of next.mail)if(!['sent','uncertain'].includes(mail.status)){mail.status='stale';const d=next.decisions.find(d=>d.id===mail.decisionId);if(d)d.status='stale';}project=await save(repo,project,next);project=await materializeMail(repo,project);await queue(repo,project);return json({project});}
  if(action==='concept'){let concept;try{concept=validateOfficeConcept(data.concept);}catch{throw new RequestError(400,'The office concept does not pass the geometric checks. Keep rooms, doors, and circulation inside the suite without overlap.');}const next=putArtifact(project,'concept',concept as unknown as Record<string,unknown>);next.messages.push({id:crypto.randomUUID(),role:'user',text:'I edited the current office concept. Preserve these edits when preparing the revised design checkpoint unless I request another change.',createdAt:iso()});project=await save(repo,project,next);await queue(repo,project);return json({project});}
@@ -84,7 +101,7 @@ export async function handleAutonomyMcp(request:Request,env:AutoEnvironment):Pro
  const listing=[{name:'advance_authorized_projects',description:'Advance already-authorized Schema project stages. Stops at approvals, missing evidence and run limits. Never sends messages or submits permits.',inputSchema:{type:'object',properties:{},additionalProperties:false}},{name:'runner_status',description:'Read background runner and integration status without advancing or approving work.',inputSchema:{type:'object',properties:{},additionalProperties:false}}];
  if(input.method==='tools/list')return reply({tools:listing});
  if(input.method==='tools/call'){const params=input.params as {name?:string;arguments?:unknown};if(!params||!listing.some(t=>t.name===params.name))throw new RequestError(400,'Unknown tool.');if(params.arguments&&Object.keys(params.arguments as object).length)throw new RequestError(400,'This tool accepts no arguments.');if(params.name==='runner_status')return reply({content:[{type:'text',text:JSON.stringify(await integrations(env))}]});
- const result=await pumpJobs(createRepository(env),env,2);const db=env.DB as D1Database;const state={lastTickAt:iso()};await db.prepare('INSERT INTO auto_runtime (key,value_json,updated_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json,updated_at=excluded.updated_at').bind('background',JSON.stringify(state),iso()).run();
+ const result=await pumpBatch(createRepository(env),env);const db=env.DB as D1Database;const state={lastTickAt:iso()};await db.prepare('INSERT INTO auto_runtime (key,value_json,updated_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json,updated_at=excluded.updated_at').bind('background',JSON.stringify(state),iso()).run();
  return reply({content:[{type:'text',text:JSON.stringify({result,...state})}]});}
  return json({jsonrpc:'2.0',id,error:{code:-32601,message:'Method not found'}});
  }catch{return json({jsonrpc:'2.0',id:null,error:{code:-32603,message:'The background step could not finish. No approval or external action was inferred.'}},500);}

@@ -1,29 +1,29 @@
-# Autonomous Schema implementation
+# Schema commercial project agent
 
-This version implements the approved project-agent direction for architects and contractors, starting with a fictional Portland office fit-out. Project records, job state, model response identifiers, approvals, preferences, and receipts are durable in D1; original PDFs, complete extraction records and immutable project/artifact revision snapshots are in R2. It preserves the original Site identity and private audience. The prior development study is retained at `/legacy`.
+The main workspace has project conversation, current work and decisions. Both brief-led projects and existing-project corrections use owner-scoped D1 state, R2 originals/extractions/revision snapshots, artifact dependencies and approval records. The retained manual desk and residential study remain at `/legacy` and supply no commercial requirements.
 
-## Runtime and authority
+## Coordination and authority
 
-The supported Vinext runtime packages append-only Drizzle migrations. Project APIs require the signed-in Site owner identity and check ownership; mutations require the same origin. The private MCP runner advances authorized stages but cannot approve or send external actions. Each stage is bounded by 12 model requests, 24 tool actions, 60 minutes and two transient retries. Leases, checkpoints, optimistic concurrency, tool receipts and state-size checks protect resumability. Pause/resume preserves saved provider state and execution budgets; a checkpoint cannot be bypassed by pausing it.
+`src/autonomy/corrections.ts` owns the authoritative reviewer register, immutable page bindings, response fingerprints and completeness assessment. Only a user can confirm a register or review an exact response. Model tools can draft or revise; they cannot establish human review, city acceptance, professional competence or external authority. Response patches merge by internal comment ID so unrelated drafts and reviews survive. Independent checks send the model back to fill omitted register items with explicit unresolved responses before normal stage completion.
 
-A server-only `MODEL_API_KEY` is required. The browser connection used by the earlier prototype is insufficient for unattended work. Keep secrets in the hosting environment or ignored local environment files; do not publish them in source, prompts, screenshots or archives.
+Source replacement preserves historical material and review records. Only reviews whose source, response, comment or declared concept dependency changed become obsolete. Exact SHA-256 fingerprints prevent a user click from approving a different response version. Original file downloads require project ownership and verify stored bytes against the source hash. Research records retain retrieval time, supporting draft claim, extracted excerpt, content hash and a private snapshot when available; search citations are labeled separately. Neither source retrieval nor quotation matching proves project-specific requirements.
 
-Gmail remains unavailable unless hosting eligibility, a real request-scoped adapter, connection, and write consent have been independently verified. The mail service contains exact-content approval, a send claim, provider receipts, uncertainty handling and reconciliation; controlled-provider tests do not establish a live connected account. No autonomous city filing is claimed.
+## Durable execution
 
-## Product behavior
+Fenced leases, persisted provider IDs/history, tool outcomes, event receipts, optimistic concurrency and immutable R2 snapshots protect resumed work. The runner can perform multiple bounded exchanges in one invocation and stops at approval/input gates. Authorized API actions also start a short server-owned batch with Cloudflare `waitUntil`; this is a bounded kick, not a perpetual worker.
 
-Start with a brief and available PDFs. Agents prepare project understanding, commercial concepts and permit strategy, coordination work and a review handoff. They stop for consolidated questions and user checkpoints. Documents are untrusted evidence, never authority to execute instructions. Feedback requeues affected work. Concept changes invalidate dependent approvals rather than every unrelated decision.
+The native recurring task is enabled hourly because the platform rejects five-minute scheduling. It can repeat bounded MCP batches rather than waiting another scheduler interval for each exchange. Queued time before the first execution is separate from the 60-minute attempt budget. Model calls, tool actions and retries remain bounded and duplicated deliveries remain fenced.
 
-Office concepts share one model across the SVG floor plan, Three.js cutaway, room edits and geometry validation. They are conceptual, not professional permit drawings. Residential R5 checks do not apply to them.
+Pause/resume retains provider state and budgets. Saved-run recovery uses an atomic D1 project/job transition without resetting counts. An exhausted attempt requires a distinct explicit new-attempt action. Recovery is fenced by the exact recovery event so a concurrent context edit cannot revive an old provider job against new material. Failed initial Meta PDF transfers retain the readable original and are handed to bounded runner retry rather than leaving an unrecoverable file-only block.
 
-Preference records preserve provenance and scope. Deleted preferences retain a content-free suppression marker so later agent runs cannot resurrect them from historical decisions. These records are application memory, not model retraining or evidence of professional competence.
+## Live dependencies
 
-PDF intake supports eight files, each at most 10 MB and 50 pages. Original sources and full extracted page text are stored in R2. Missing/scanned or text exceeding the bounded D1 excerpt budget is explicitly flagged. Meta file receipts are distinct from verified extraction or drawing adequacy.
+A hosted server-only `MODEL_API_KEY` is still required for authenticated acceptance. Local private files are not hosted configuration. The Site MCP OAuth connection has been exercised successfully; the older private HTTP service-token test was not sufficient to assess this connection.
 
-## Verification status
+Hourly schedule creation and a subsequent persisted heartbeat have been observed. They do not prove closed-tab model completion. `SCHEMA_BACKGROUND_VERIFIED` remains false until a fresh authorized document/tool/revision stage progresses with the workspace closed and is read back afterward.
 
-Use the test/build output and current handoff report for actual results. In particular, do not infer any of these from a successful build: authenticated Meta processing, hosted D1/R2 persistence, cloud-scheduled progress, Gmail delivery, city submission or permit issuance. Each requires separate observed acceptance.
+Gmail remains a tested provider interface; a native hosting adapter, eligibility and account consent remain unavailable. Sending is disabled without those prerequisites, and uncertain delivery requires reconciliation. Manual reviewed handoff remains available. No city portal submission is implemented.
 
-## Share package
+## Verification
 
-The source archive is intended for local review and implementation handoff. It excludes dependencies, build caches, local credentials, private project records, and Git authentication state. The live development Site remains private. To deploy an independent copy, create a separate Site and replace the hosting project identity through the supported Sites workflow; do not publish a fork over the original Site.
+See `VERIFICATION.md`, `verification-record.json`, `DEPLOYMENT-STATUS.md`, and `PRACTITIONER-PILOT.md`. Controlled provider responses, local/browser tests, hosted observations and practitioner value are separate evidence classes. Fixtures are explicitly fictional. Application preference memory is editable persisted state, not model retraining or authority to act.
