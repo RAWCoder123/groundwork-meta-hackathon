@@ -1,3 +1,5 @@
+<img src="docs/schema-mark.svg" width="56" alt="Schema mark">
+
 # Schema
 
 [Public source](https://github.com/RAWCoder123/groundwork-meta-hackathon) · [Demo](https://groundwork-adus.raymondaw2006.chatgpt.site/) · [Teammate access](docs/TEAM-ACCESS.md) · [Setup and sharing](docs/SHARING.md) · [Implementation](docs/AUTONOMOUS-IMPLEMENTATION.md) · [Hackathon demo](docs/HACKATHON.md)
