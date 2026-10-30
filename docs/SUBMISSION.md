@@ -35,7 +35,7 @@ Record against the published Site after the live run passes. Use real Meta outpu
 | 0:15–0:35 | Paste the fictional brief, upload the PDF, start | "I give it a brief and the existing documents. Muse Spark reads the PDF pages directly; every fact keeps its page." |
 | 0:35–0:60 | Activity band while working; understanding checkpoint | "It works on its own: inspecting the project, researching official Portland sources, drafting. Then it stops. I confirm what it understood before it designs anything." |
 | 1:00–1:30 | Concept: floor plan ↔ 3D, edit a room | "One model drives the plan and the 3D view. Geometry checks run on every change. These are concepts for decisions, not permit drawings." |
-| 1:30–1:55 | Independent review row on the proposal | "Before any checkpoint, a second Meta request reviews the drafts: unsupported claims, invented facts, overstated authority. Blocking findings send the agent back to revise once; you see what was found and what changed." |
+| 1:30–1:55 | Independent review row on the proposal (a live run that drew blocking findings shows the revision best) | "Before any checkpoint, a second Meta request reviews the drafts: unsupported claims, invented facts, overstated authority. Blocking findings send the agent back to revise once; you see what was found and what changed." |
 | 1:55–2:20 | Type layout feedback; earlier approval goes stale; revised concept | "I ask for a bigger meeting room by the entry. It revises, and the old approval is marked stale so nothing gets approved against outdated work." |
 | 2:20–2:45 | Package checkpoint; Export handoff | "At the end it assembles a handoff with every unresolved responsibility, the sources and the review findings, bound to an exact project revision." |
 | 2:45–3:00 | Close and reopen; saved progress | "Work is durable and bounded: budgets, saved provider state, and nothing external happens without approval. Schema never claims a permit, sign-off or city acceptance." |
@@ -47,8 +47,8 @@ Event-created features to name on screen or in the description: the workspace, t
 | Claim | Evidence | Status |
 | --- | --- | --- |
 | Tests, build and artifact validation | `npm test`, `npm run build`, `npm run validate` on the submitted commit | Run on the final commit |
-| Live Meta document → tools → revision → handoff | `scripts/live-smoke.ts` → `docs/live-run-record.json` | **Pending a key in `.dev.vars`** |
-| Independent critic and revision loop | Controlled tests in `tests/autonomy-runner.test.ts`; live critique in the run record | Controlled: done. Live: pending |
+| Live Meta document → tools → revision → handoff | `scripts/live-smoke.ts` → `docs/live-run-record*.json` (PR #3) | **Done locally**: three consecutive passing runs with a real key |
+| Independent critic and revision loop | Controlled tests; live run 2 in PR #3 (4 blocking findings → handoff revised) | **Done**: controlled and live (local) |
 | Hosted signed-in acceptance | Owner and a second account complete the judge steps | Pending |
 | Unattended progress with the tab closed | Fresh stage advances after closing, read back on reopen | Pending; do not claim until observed |
 | Email delivery, city submission, permit issuance | — | Not implemented or not claimed |
@@ -56,7 +56,7 @@ Event-created features to name on screen or in the description: the workspace, t
 ## Submission checklist
 
 - [ ] PRs #1–#4 merged and the Site republished from `main`.
-- [ ] Live smoke run passes twice; `docs/live-run-record.json` committed.
+- [x] Live smoke run passes (three consecutive local runs; evidence in PR #3).
 - [ ] Hosted run by the owner, plus a second account for judge access.
 - [ ] Three-minute video recorded from real runs and uploaded with access for judges.
 - [ ] Team names, roles and track entered on the event form.
