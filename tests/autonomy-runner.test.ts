@@ -178,3 +178,14 @@ test('the critic kill switch restores the original stage flow',async()=>{
  const {repo,project,job}=await setup();const seen=scripted([...draftUnderstanding],[]);let result;for(let i=0;i<4;i++){repo.due(job.id);result=await advanceJob(repo,{...criticEnv,SCHEMA_CRITIC:'off'},job.id);if(result.status==='needs_approval')break;}
  assert.equal(result!.status,'needs_approval');assert.equal(seen.critic,0);assert.equal((await repo.getProject(project.id))!.critiques,undefined);
 });
+
+test('brief-led projects are not offered the reviewer register and cannot create one',async()=>{
+ const {repo,project,job}=await setup();let tools:string[]=[];globalThis.fetch=async(_url,init)=>{tools=JSON.parse(String(init!.body)).tools.map((t:any)=>t.name).filter(Boolean);return response(done([call('inspect_project'),call('propose_review_register',{comments:[{id:'c1',number:'LS-1',wording:'Provide exit signage.',discipline:'Life safety',responsible:'Architect',parentId:null,source:{documentId:'d',page:1,quote:'Provide exit signage.'},uncertain:false}]})]));};
+ assert.equal((await advanceJob(repo,env,job.id)).status,'advanced');assert.ok(!tools.includes('propose_review_register'));assert.ok(tools.includes('propose_understanding'));
+ const saved=(await repo.getProject(project.id))!;assert.equal(saved.corrections,undefined);assert.equal(saved.status,'running');assert.match(JSON.stringify((await repo.getJob(job.id))!.history.at(-1)),/started from a brief/);
+});
+
+test('an incomplete critic response that still carries its tool call is read, not discarded',async()=>{
+ const {repo,project,job}=await setup();scripted([...draftUnderstanding],[{id:'crit_incomplete',status:'incomplete',output:[{type:'reasoning'},call('record_critique',{findings:[finding('advisory')]})]}]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const saved=(await repo.getProject(project.id))!;assert.equal(saved.critiques![0].status,'clear');assert.equal(saved.critiques![0].findings.length,1);
+});
