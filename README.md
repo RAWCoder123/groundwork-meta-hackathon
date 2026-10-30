@@ -2,7 +2,7 @@
 
 # Schema
 
-[Public source](https://github.com/RAWCoder123/groundwork-meta-hackathon) · [Demo](https://groundwork-adus.raymondaw2006.chatgpt.site/) · [Teammate access](docs/TEAM-ACCESS.md) · [Setup and sharing](docs/SHARING.md) · [Implementation](docs/AUTONOMOUS-IMPLEMENTATION.md) · [Hackathon demo](docs/HACKATHON.md)
+[Public source](https://github.com/RAWCoder123/groundwork-meta-hackathon) · [Demo](https://groundwork-adus.raymondaw2006.chatgpt.site/) · [Teammate access](docs/TEAM-ACCESS.md) · [Setup and sharing](docs/SHARING.md) · [Implementation](docs/AUTONOMOUS-IMPLEMENTATION.md) · [Hackathon demo](docs/HACKATHON.md) · [Submission](docs/SUBMISSION.md)
 
 Schema is an autonomous commercial project workspace for architects and contractors, built for the Meta Global AI Developer Hackathon. Start with a brief and available PDFs; the agent develops understanding, a commercial concept and permit strategy, coordination work and a reviewed handoff. Users give feedback and approve meaningful decisions. The first case is a **fictional Portland office fit-out**. The first measurable workflow is responding to city review comments on an existing project, alongside the brief-led entry point.
 

@@ -1,5 +1,7 @@
 # Schema hackathon demonstration
 
+The current submission package (video script, judge access, evidence table and checklist) is in [SUBMISSION.md](SUBMISSION.md).
+
 ## Product and track
 
 Schema targets the supplied **Build for Your World** problem statement: reduce repetitive commercial project coordination while leaving consequential choices with the architect or contractor. The primary experience is now the autonomous project workspace at `/`; the manual correction desk and residential study are retained at `/legacy`.
@@ -32,6 +34,8 @@ Development began October 27, 2026. Use the actual public Git history and tested
 - PDF page extraction and provenance, missing-information tracking and versioned artifacts.
 - Dependency-bound approvals, feedback revisions and editable preferences with deletion suppression.
 - Exact-content mail approval and uncertainty handling, plus the restricted background runner.
+- An independent Meta critic pass before each checkpoint, with one bounded revision round and persisted findings.
+- A labeled prepared example project, the Schema mark and the independent review row in the workspace.
 - Fictional examples, handoff exports, tests and implementation documentation.
 
 The Vinext/Sites starter, React, Three.js, PDF.js, Drizzle, Lucide and other dependencies are third-party components under their own licenses. The interface concept image was a development reference. Do not claim these components as original work or describe application geometry as a Meta-generated image.
