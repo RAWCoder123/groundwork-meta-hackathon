@@ -156,7 +156,7 @@ test("bounded batch continues multiple saved tool exchanges in one invocation", 
     };
     const outcomes = await pumpBatch(
       repo,
-      { ...env, MODEL_API_KEY: "fake-test-key" },
+      { ...env, MODEL_API_KEY: "fake-test-key", SCHEMA_CRITIC: "off" },
       { maxSteps: 8, milliseconds: 25000 },
     );
     assert.equal(outcomes.length, 3);

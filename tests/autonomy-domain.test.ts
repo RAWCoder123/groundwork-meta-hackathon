@@ -87,3 +87,12 @@ test('packet escapes project/model content and preserves unknown work, versions 
   let p=create();p.title='<img src=x onerror=alert(1)>';p=putArtifact(p,'understanding',{summary:'<script>alert(1)</script>',assumptions:['No actual survey'],missingInformation:['Professional drawings']});
   const html=buildAutonomousPacket(p);assert.ok(!html.includes('<script>alert'));assert.ok(!html.includes('<img src=x'));assert.match(html,/&lt;script&gt;/);assert.match(html,/Professional drawings/);assert.match(html,/not complete permit drawings or city approval/);assert.match(html,/No external messages or submission receipts/);assert.match(html,/revision 1/);
 });
+
+test('persisted critiques are validated and older projects without them remain valid',()=>{
+ const p=createAutoProject('owner','Fictional office brief for critique validation.');
+ assert.doesNotThrow(()=>validateProject(p));
+ const good={...p,critiques:[{id:'c1',stage:'understanding',jobId:'job',status:'clear',artifactVersions:{understanding:1},findings:[{severity:'advisory',artifactKind:'understanding',claim:'A claim.',issue:'An issue.'}],createdAt:new Date().toISOString()}]};
+ assert.equal(validateProject(good).critiques?.length,1);
+ assert.throws(()=>validateProject({...good,critiques:[{...good.critiques[0],findings:[{...good.critiques[0].findings[0],severity:'fatal'}]}]}),/critique finding/);
+ assert.throws(()=>validateProject({...good,critiques:[{...good.critiques[0],status:'approved'}]}),/critique state/);
+});

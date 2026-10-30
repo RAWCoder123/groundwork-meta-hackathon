@@ -1,7 +1,7 @@
 import test, {afterEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {advanceJob,pumpJobs} from '../server/autonomy/runner';
-import {createAutoProject,createStageJob,applyFeedback,putArtifact,applyDecision,currentDecision,finishStage} from '../src/autonomy/domain';
+import {createAutoProject,createStageJob,applyFeedback,putArtifact,applyDecision,currentDecision,finishStage,buildAutonomousPacket} from '../src/autonomy/domain';
 import {DatabaseSync} from 'node:sqlite';
 import {createRepository,type D1Database,type D1Statement} from '../server/autonomy/repository';
 import {makeOfficeConcept} from '../src/autonomy/concept';
@@ -28,7 +28,8 @@ class MemoryRepository implements Repository {
  due(id:string){const j=this.jobs.get(id)!;j.nextRunAt=new Date(Date.now()-100).toISOString();}
 }
 const KEY='runner-test-secret-never-display';
-const env={MODEL_API_KEY:KEY};
+// Legacy flows count exact provider requests; the critic phase has its own tests.
+const env={MODEL_API_KEY:KEY,SCHEMA_CRITIC:'off'};
 const response=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json'}});
 const call=(name:string,args:unknown={},callId=name)=>({type:'function_call',call_id:callId,name,arguments:JSON.stringify(args)});
 const done=(output:unknown[],id='resp_test')=>({id,status:'completed',output});
@@ -132,3 +133,48 @@ test('handoff feedback can reopen the design stage without another manual run',a
 });
 test('pause during a provider response preserves the response and resumes without a new model request',async()=>{const {repo,project,job}=await setup();const output=done([call('inspect_project')],'resp_pause');globalThis.fetch=async()=>{const current=(await repo.getProject(project.id))!;const paused=copy(current);paused.status='paused';paused.version++;paused.pauseState={fromVersion:current.version,targetVersion:paused.version,pausedAt:new Date().toISOString()};await repo.saveProject(paused,current.version);return response(output);};assert.equal((await advanceJob(repo,env,job.id)).status,'paused');let saved=(await repo.getJob(job.id))!;assert.equal(saved.responseId,'resp_pause');assert.equal(saved.modelRequests,1);assert.equal(saved.toolExecutions,0);const current=(await repo.getProject(project.id))!;const resumed=copy(current);resumed.version++;resumed.status='running';resumed.pauseState!.targetVersion=resumed.version;await repo.saveProject(resumed,current.version);repo.due(job.id);globalThis.fetch=async(_url,init)=>{assert.equal(init?.method,'GET');return response(output);};assert.equal((await advanceJob(repo,env,job.id)).status,'advanced');saved=(await repo.getJob(job.id))!;assert.equal(saved.modelRequests,1);assert.equal(saved.toolExecutions,1);assert.equal(repo.jobs.size,1);});
 test('queue wait does not consume the execution budget before the first authorized provider request',async()=>{const {repo,job,project}=await setup();job.startedAt=new Date(Date.now()-86400000).toISOString();await repo.saveJob(job);globalThis.fetch=async()=>response(done([call('inspect_project')],'resp_after_queue'));assert.equal((await advanceJob(repo,env,job.id)).status,'advanced');const saved=(await repo.getJob(job.id))!;assert.ok(Date.parse(saved.executionStartedAt!)>Date.now()-60000);assert.equal(saved.startedAt,job.startedAt);assert.equal(saved.modelRequests,1);assert.equal((await repo.getProject(project.id))!.status,'running');});
+
+// Independent critic phase. Main-agent and critic requests are told apart by the critic's single tool.
+const criticEnv={MODEL_API_KEY:KEY};
+const finding=(severity:'blocking'|'advisory')=>({severity,artifactKind:'understanding',claim:'The suite has approved office occupancy.',issue:'Occupancy is not established by the brief or any document.'});
+function scripted(main:unknown[],critic:unknown[]){const seen={main:0,critic:0,mainBodies:[] as any[],criticBodies:[] as any[]};globalThis.fetch=async(url,init)=>{if(init?.method!=='POST'){const id=String(url).split('/').pop();const next=critic.shift();assert.ok(next,`Unexpected poll for ${id}`);return response(next);}const body=JSON.parse(String(init.body));if(body.tools?.[0]?.name==='record_critique'){seen.critic++;seen.criticBodies.push(body);const next=critic.shift();assert.ok(next,'Unexpected critic request');return response(next);}seen.main++;seen.mainBodies.push(body);const next=main.shift();assert.ok(next,'Unexpected agent request');return response(next);};return seen;}
+async function drive(repo:MemoryRepository,jobId:string){let result;for(let i=0;i<12;i++){repo.due(jobId);result=await advanceJob(repo,criticEnv,jobId);if(!['advanced','waiting_provider'].includes(result.status))return result;}return result!;}
+const draftUnderstanding=[done([call('inspect_project'),call('propose_understanding',understanding)],'resp_a'),done([final()],'resp_b')];
+
+test('independent critic reviews the stage drafts once and records a clear result before the checkpoint',async()=>{
+ const {repo,project,job}=await setup();const seen=scripted([...draftUnderstanding],[done([call('record_critique',{findings:[finding('advisory')]})],'crit_a')]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const saved=(await repo.getProject(project.id))!;
+ assert.equal(seen.critic,1);assert.equal(seen.main,2);assert.equal(seen.criticBodies[0].tools.length,1);assert.match(seen.criticBodies[0].input[0].content[0].text,/60by40foot/);
+ assert.equal(saved.critiques?.length,1);assert.equal(saved.critiques![0].status,'clear');assert.equal(saved.critiques![0].findings[0].severity,'advisory');assert.deepEqual(saved.critiques![0].artifactVersions,{understanding:1});
+ assert.equal(currentDecision(saved)?.kind,'understanding');assert.equal((await repo.getJob(job.id))!.modelRequests,3);
+ assert.match(buildAutonomousPacket(saved),/Independent review[\s\S]*No misleading claims found/);
+});
+
+test('a blocking critique sends the agent back for exactly one revision and records the revised versions',async()=>{
+ const {repo,project,job}=await setup();const revised={...understanding,assumptions:['Occupancy and permit history are unverified and require professional confirmation.']};
+ const seen=scripted([...draftUnderstanding,done([call('propose_understanding',revised,'call_revise')],'resp_c'),done([final()],'resp_d')],[done([call('record_critique',{findings:[finding('blocking')]})],'crit_b')]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const saved=(await repo.getProject(project.id))!;
+ assert.equal(seen.critic,1);assert.ok(JSON.stringify(seen.mainBodies[2].input).includes('independent reviewer'));
+ const critique=saved.critiques![0];assert.equal(critique.status,'revised');assert.deepEqual(critique.revisedVersions,{understanding:2});assert.ok(critique.resolvedAt);
+ assert.equal(currentDecision(saved)?.artifactVersions.understanding,2);
+});
+
+test('a blocking critique the agent does not act on stays visibly unaddressed',async()=>{
+ const {repo,project,job}=await setup();scripted([...draftUnderstanding,done([final('No change needed.')],'resp_c')],[done([call('record_critique',{findings:[finding('blocking')]})],'crit_c')]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const saved=(await repo.getProject(project.id))!;assert.equal(saved.critiques![0].status,'unaddressed');assert.equal(saved.critiques![0].revisedVersions,undefined);
+});
+
+test('an exhausted model budget skips the critic without another request and records why',async()=>{
+ const {repo,project,job}=await setup();job.modelRequests=10;await repo.saveJob(job);const seen=scripted([...draftUnderstanding],[]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const saved=(await repo.getProject(project.id))!;assert.equal(seen.critic,0);assert.equal(saved.critiques![0].status,'unavailable');assert.match(saved.critiques![0].note!,/budget/);assert.equal((await repo.getJob(job.id))!.modelRequests,12);
+});
+
+test('a queued critic response is resumed by ID and unreadable output never blocks the stage',async()=>{
+ const {repo,project,job}=await setup();const seen=scripted([...draftUnderstanding],[{id:'crit_wait',status:'queued'},done([final('Looks fine overall.')],'crit_wait')]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const saved=(await repo.getProject(project.id))!;assert.equal(seen.critic,1);assert.equal(saved.critiques![0].status,'unavailable');assert.equal((await repo.getJob(job.id))!.modelRequests,3);
+});
+
+test('the critic kill switch restores the original stage flow',async()=>{
+ const {repo,project,job}=await setup();const seen=scripted([...draftUnderstanding],[]);let result;for(let i=0;i<4;i++){repo.due(job.id);result=await advanceJob(repo,{...criticEnv,SCHEMA_CRITIC:'off'},job.id);if(result.status==='needs_approval')break;}
+ assert.equal(result!.status,'needs_approval');assert.equal(seen.critic,0);assert.equal((await repo.getProject(project.id))!.critiques,undefined);
+});
