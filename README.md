@@ -22,10 +22,10 @@ Each stage stops at an approval gate, missing dependency, 12 model requests, 24 
 
 ## Integration status
 
-Source implementation and live acceptance are separate. See [verification evidence](docs/VERIFICATION.md).
+Source implementation and live acceptance are separate. See [verification evidence](docs/VERIFICATION.md) and [hosted status](docs/DEPLOYMENT-STATUS.md).
 
 - **Meta:** a privately configured hosted `MODEL_API_KEY` is required. The old tab-memory key cannot support unattended work. Authenticated document/tool/revision acceptance remains pending.
-- **Background work:** the runner is implemented. A schedule or heartbeat alone does not prove that a closed workspace completes a real authorized stage.
+- **Background work:** the runner is implemented. The native scheduler rejected the requested five-minute cadence because it permits at most hourly runs; no schedule was created. MCP cloud authorization and actual closed-tab stage completion remain unverified.
 - **Gmail:** sending is unavailable until native eligibility, account selection, consent and an actual hosting adapter are verified. Controlled-provider tests do not prove live delivery.
 - **Permitting:** DevHub remains a reviewed handoff. Source citations do not establish site-specific compliance, professional sign-off, permit issuance or construction completion.
 
