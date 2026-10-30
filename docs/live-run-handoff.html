@@ -1,0 +1,237 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fictional Portland office fit-out in a 60 by 40 foot rectangular suite with a 10 foot ceiling · Schema handoff</title><style>body{font:15px/1.6 system-ui;color:#29332a;max-width:1000px;margin:40px auto;padding:0 24px}h1,h2,h3{line-height:1.25}section{padding:18px 0;border-top:1px solid #ddd;break-inside:avoid}.notice{border:2px solid #a58a58;padding:18px;background:#fbf7ef}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}a{color:#445d3a}.meta{color:#6e7869;font-size:12px}@media print{body{margin:0}}</style></head><body><p class="meta">SCHEMA · COMMERCIAL PROJECT COORDINATION · PROJECT REVISION 26</p><h1>Fictional Portland office fit-out in a 60 by 40 foot rectangular suite with a 10 foot ceiling</h1><div class="notice"><strong>Applicant review handoff — not complete permit drawings or city approval</strong><p>This packet records the project brief, conceptual work, sources and outstanding responsibilities. It does not prove plan adequacy, professional sign-off, actual city submission, permit issuance, or construction completion. Supporting files and responsible professional review remain separate.</p></div><h2>Project brief</h2><pre>Fictional Portland office fit-out in a 60 by 40 foot rectangular suite with a 10 foot ceiling. Keep the existing office use, exterior and structure unchanged. Explore an open workspace, a meeting room, two quiet offices and shared circulation. Help me develop the concept and permit strategy, identify missing professional information and prepare a reviewed handoff. Existing permit history, technical compliance and site conditions are not verified.</pre><p>Current stage: handoff · Status: awaiting_external</p><h2>Questions and missing information</h2><p>No unanswered project questions are recorded. This does not establish technical completeness.</p><h2>Current artifacts and assumptions</h2><section><h3>Project understanding · revision 1</h3><p class="meta">Current dependency references</p><pre>{
+  &quot;summary&quot;: &quot;Fictional 60x40x10 ft Portland office fit-out: keep office use, exterior, and structure; explore open workspace plus 1 meeting room, 2 offices, and circulation. No verified history, compliance, measurements, or approvals.&quot;,
+  &quot;confirmedFacts&quot;: [
+    &quot;Fictional/synthetic demonstration only; no real parcel or permit&quot;,
+    &quot;Location context: Portland, Oregon&quot;,
+    &quot;Declared concept suite: 60 feet wide by 40 feet deep, 10 feet high&quot;,
+    &quot;Existing office use to remain unchanged&quot;,
+    &quot;Exterior and structure to remain unchanged&quot;,
+    &quot;Requested program: open workspace/desks, 1 meeting room, 2 quiet/private offices, and shared circulation&quot;,
+    &quot;Goal includes concept, permit strategy, missing professional information, and reviewed handoff&quot;,
+    &quot;Existing permit history, technical compliance, and site conditions are not verified&quot;,
+    &quot;No professional drawings, measurements, or city approval are established&quot;,
+    &quot;Briefing document requests concise explanations and daylight near open workspace&quot;
+  ],
+  &quot;assumptions&quot;: [
+    &quot;Treated 60x40x10 ft declared suite as a rectangular concept shell only; not a field-verified measurement&quot;,
+    &quot;Existing conditions to be preserved separately and confirmed by professional survey; no existing partitions assumed removed or retained yet&quot;,
+    &quot;Interior nonstructural fit-out only is assumed; no exterior, structural, food, medical, or hazard scope&quot;,
+    &quot;PDF text is treated as untrusted briefing evidence only, not authority or verified code fact&quot;,
+    &quot;Daylight adjacency for open workspace is a design preference to explore, pending confirmation of actual window/opening locations&quot;
+  ],
+  &quot;missingInformation&quot;: [
+    &quot;Legal occupancy/permit history and applicable code edition - requires licensed professional review&quot;,
+    &quot;Field-verified existing conditions: measurements, partitions, doors, structure, MEP, fire alarm, accessibility, and window/daylight locations&quot;,
+    &quot;Base building information and professional scope: architect/code, MEP/fire protection coordination needs&quot;
+  ]
+}</pre></section><section><h3>Commercial office concept · revision 2</h3><p class="meta">Current dependency references</p><pre>{
+  &quot;units&quot;: &quot;ft&quot;,
+  &quot;width&quot;: 60,
+  &quot;depth&quot;: 40,
+  &quot;height&quot;: 10,
+  &quot;rooms&quot;: [
+    {
+      &quot;id&quot;: &quot;open&quot;,
+      &quot;name&quot;: &quot;Open workspace&quot;,
+      &quot;x&quot;: 0,
+      &quot;y&quot;: 0,
+      &quot;width&quot;: 34,
+      &quot;depth&quot;: 22,
+      &quot;kind&quot;: &quot;open&quot;
+    },
+    {
+      &quot;id&quot;: &quot;office1&quot;,
+      &quot;name&quot;: &quot;Quiet office 1&quot;,
+      &quot;x&quot;: 34,
+      &quot;y&quot;: 0,
+      &quot;width&quot;: 13,
+      &quot;depth&quot;: 16,
+      &quot;kind&quot;: &quot;office&quot;
+    },
+    {
+      &quot;id&quot;: &quot;office2&quot;,
+      &quot;name&quot;: &quot;Quiet office 2&quot;,
+      &quot;x&quot;: 47,
+      &quot;y&quot;: 0,
+      &quot;width&quot;: 13,
+      &quot;depth&quot;: 16,
+      &quot;kind&quot;: &quot;office&quot;
+    },
+    {
+      &quot;id&quot;: &quot;meeting&quot;,
+      &quot;name&quot;: &quot;Meeting room - 10 seats&quot;,
+      &quot;x&quot;: 18,
+      &quot;y&quot;: 22,
+      &quot;width&quot;: 26,
+      &quot;depth&quot;: 12,
+      &quot;kind&quot;: &quot;meeting&quot;
+    }
+  ],
+  &quot;doors&quot;: [
+    {
+      &quot;id&quot;: &quot;D-open&quot;,
+      &quot;x&quot;: 5,
+      &quot;y&quot;: 22,
+      &quot;width&quot;: 3,
+      &quot;wall&quot;: &quot;south&quot;,
+      &quot;roomId&quot;: &quot;open&quot;
+    },
+    {
+      &quot;id&quot;: &quot;D-off1&quot;,
+      &quot;x&quot;: 38,
+      &quot;y&quot;: 16,
+      &quot;width&quot;: 3,
+      &quot;wall&quot;: &quot;south&quot;,
+      &quot;roomId&quot;: &quot;office1&quot;
+    },
+    {
+      &quot;id&quot;: &quot;D-off2&quot;,
+      &quot;x&quot;: 52,
+      &quot;y&quot;: 16,
+      &quot;width&quot;: 3,
+      &quot;wall&quot;: &quot;south&quot;,
+      &quot;roomId&quot;: &quot;office2&quot;
+    },
+    {
+      &quot;id&quot;: &quot;D-meet&quot;,
+      &quot;x&quot;: 30,
+      &quot;y&quot;: 34,
+      &quot;width&quot;: 3,
+      &quot;wall&quot;: &quot;south&quot;,
+      &quot;roomId&quot;: &quot;meeting&quot;
+    },
+    {
+      &quot;id&quot;: &quot;D-entry&quot;,
+      &quot;x&quot;: 30,
+      &quot;y&quot;: 40,
+      &quot;width&quot;: 3,
+      &quot;wall&quot;: &quot;south&quot;,
+      &quot;roomId&quot;: null
+    }
+  ],
+  &quot;circulation&quot;: [
+    {
+      &quot;x&quot;: 0,
+      &quot;y&quot;: 34,
+      &quot;width&quot;: 60,
+      &quot;depth&quot;: 6
+    },
+    {
+      &quot;x&quot;: 0,
+      &quot;y&quot;: 24,
+      &quot;width&quot;: 8,
+      &quot;depth&quot;: 10
+    }
+  ],
+  &quot;existingNotes&quot;: &quot;Existing office suite shell 60x40x10 ft preserved. No existing partitions, doors, structure, MEP, or exterior documented; field survey and permit history review required. Concept shows proposed partitions only.&quot;,
+  &quot;assumptions&quot;: [
+    &quot;Enlarged meeting room sized as concept assumption for 10 seats (~26x12 ft); actual seating/furniture layout needs professional verification&quot;,
+    &quot;Meeting room placed adjacent to suite entry corridor as requested; both quiet offices retained&quot;,
+    &quot;Daylight side assumed along north wall y=0 with open workspace adjoining it; actual windows/openings unverified&quot;,
+    &quot;All partitions shown as PROPOSED concept only; existing partitions unknown and preserved separately pending survey&quot;,
+    &quot;Accessible route and door clearances diagrammatic only; licensed professional review required&quot;
+  ]
+}</pre></section><section><h3>Permit strategy · revision 2</h3><p class="meta">Current dependency references</p><pre>{
+  &quot;summary&quot;: &quot;Concise strategy: same-use interior fit-out concept with enlarged 10-seat meeting room next to suite entry, open workspace at daylight side, 2 quiet offices, circulation. Geometry checks pass; compliance, history, and systems remain unverified for professional review.&quot;,
+  &quot;route&quot;: &quot;Portland commercial interior alteration — same office use, no exterior or structural change (to be confirmed by licensed professional)&quot;,
+  &quot;requirements&quot;: [
+    &quot;Interior nonstructural commercial alteration concept only; preserve office use, exterior, structure&quot;,
+    &quot;Plans to distinguish existing and proposed partitions — see LS-1&quot;,
+    &quot;Plans to identify accessible route and door clearances — see LS-2; professional accessibility review required&quot;,
+    &quot;Fire alarm coordination documentation — see FA-1&quot;,
+    &quot;Licensed professional drawings/verification required: measurements, code edition, occupancy history, MEP/fire protection&quot;
+  ],
+  &quot;nextSteps&quot;: [
+    &quot;Owner to authorize licensed design professional for field survey and permit-history review&quot;,
+    &quot;Professional to confirm existing vs proposed partitions for LS-1&quot;,
+    &quot;Professional to diagram accessible route and door clearances for LS-2&quot;,
+    &quot;Fire alarm contractor/designer to provide coordination documentation for FA-1&quot;,
+    &quot;User to assemble applicant submittal outside this aid; no city submission made here&quot;
+  ],
+  &quot;unresolved&quot;: [
+    &quot;Applicable code edition and legal occupancy/permit history&quot;,
+    &quot;Field-verified dimensions, existing partitions, structure, MEP, windows&quot;,
+    &quot;Accessibility compliance including route and clearances&quot;,
+    &quot;Fire alarm coordination scope&quot;,
+    &quot;Whether stamped professional drawings/trade permits are required for this address&quot;
+  ]
+}</pre></section><section><h3>Prepared responses and coordination · revision 1</h3><p class="meta">Current dependency references</p><pre>{
+  &quot;summary&quot;: &quot;Concise preparation draft: 3 reviewer items logged with page-local evidence, all explicitly unresolved pending licensed professional survey, accessibility review, and fire alarm documentation. No compliance verified.&quot;,
+  &quot;responses&quot;: [
+    {
+      &quot;itemId&quot;: &quot;LS-1&quot;,
+      &quot;comment&quot;: &quot;Reviewer LS-1: distinguish existing and proposed partitions.&quot;,
+      &quot;response&quot;: &quot;Unresolved — concept shows PROPOSED partitions only. Existing partitions unknown pending professional field survey. Licensed professional to verify existing conditions and produce plans distinguishing existing to remain vs proposed work.&quot;,
+      &quot;evidence&quot;: [
+        {
+          &quot;documentId&quot;: &quot;document_8ea05493-80a4-4629-bc84-3be4ea19de1c&quot;,
+          &quot;revision&quot;: 1,
+          &quot;sha256&quot;: &quot;2ff5086adfe53c584e585c71a5467c036827c0b1eb1cae7ab9149b70922bd01b&quot;,
+          &quot;page&quot;: 1,
+          &quot;quote&quot;: &quot;Reviewer LS-1: distinguish existing and proposed partitions.&quot;
+        }
+      ],
+      &quot;conceptRevision&quot;: 2,
+      &quot;missing&quot;: []
+    },
+    {
+      &quot;itemId&quot;: &quot;LS-2&quot;,
+      &quot;comment&quot;: &quot;Reviewer LS-2: identify the accessible route and door clearances.&quot;,
+      &quot;response&quot;: &quot;Unresolved — concept circulation is diagrammatic only. Accessible route and door clearances not verified. Licensed professional to diagram and dimension accessible route and clearances for review.&quot;,
+      &quot;evidence&quot;: [
+        {
+          &quot;documentId&quot;: &quot;document_8ea05493-80a4-4629-bc84-3be4ea19de1c&quot;,
+          &quot;revision&quot;: 1,
+          &quot;sha256&quot;: &quot;2ff5086adfe53c584e585c71a5467c036827c0b1eb1cae7ab9149b70922bd01b&quot;,
+          &quot;page&quot;: 1,
+          &quot;quote&quot;: &quot;Reviewer LS-2: identify the accessible route and door clearances.&quot;
+        }
+      ],
+      &quot;conceptRevision&quot;: 2,
+      &quot;missing&quot;: []
+    },
+    {
+      &quot;itemId&quot;: &quot;FA-1&quot;,
+      &quot;comment&quot;: &quot;Reviewer FA-1: provide fire alarm coordination documentation.&quot;,
+      &quot;response&quot;: &quot;Unresolved — no fire alarm documentation in this concept aid. Fire alarm designer/contractor to provide coordination documentation via licensed professional; scope unverified.&quot;,
+      &quot;evidence&quot;: [
+        {
+          &quot;documentId&quot;: &quot;document_8ea05493-80a4-4629-bc84-3be4ea19de1c&quot;,
+          &quot;revision&quot;: 1,
+          &quot;sha256&quot;: &quot;2ff5086adfe53c584e585c71a5467c036827c0b1eb1cae7ab9149b70922bd01b&quot;,
+          &quot;page&quot;: 1,
+          &quot;quote&quot;: &quot;Reviewer FA-1: provide fire alarm coordination documentation.&quot;
+        }
+      ],
+      &quot;conceptRevision&quot;: null,
+      &quot;missing&quot;: []
+    }
+  ],
+  &quot;missingInformation&quot;: [
+    &quot;Field-verified existing conditions: partitions, doors, structure, MEP, windows/daylight locations&quot;,
+    &quot;Legal occupancy/permit history and applicable code edition for licensed professional review&quot;,
+    &quot;Dimensioned accessible route and door clearances by licensed professional&quot;,
+    &quot;Fire alarm coordination documentation by fire protection/fire alarm designer&quot;
+  ]
+}</pre></section><section><h3>Applicant handoff package · revision 2</h3><p class="meta">Current dependency references</p><pre>{
+  &quot;summary&quot;: &quot;Handoff draft: internal design checkpoint recorded; 3 reviewer items logged unresolved pending professional verification. No permit issued, no compliance certified, no construction claimed.&quot;,
+  &quot;contents&quot;: [
+    &quot;Understanding v1: fictional 60x40x10 ft Portland office fit-out, same use/exterior/structure; history, compliance, site conditions not verified&quot;,
+    &quot;Concept v2 as editable decision aid only: PROPOSED partitions for open workspace, 2 quiet offices, meeting room (~26x12 labeled 10 seats), shared circulation; size/seating/entry-adjacency per user feedback as unverified assumption; daylight adjacency is preference only&quot;,
+    &quot;Strategy v2: same-use interior alteration concept route per Portland commercial alteration guidance cited; no city submission made&quot;,
+    &quot;Preparation v1: reviewer items LS-1, LS-2, FA-1 each with page-1 verbatim evidence, all explicitly unresolved&quot;
+  ],
+  &quot;unresolved&quot;: [
+    &quot;Meeting room seating/size/entry location: ~26x12 ft 10-seat label and entry-corridor placement per user feedback only; seating capacity, comparative size, and layout suitability unverified, existing partitions unknown&quot;,
+    &quot;Daylight/window locations and open-workspace daylight adjacency: actual windows/openings unverified site condition&quot;,
+    &quot;Dimensions, geometry, and code/accessibility compliance: concept rectangles are decision aid only, not surveyed measurements or compliance proof&quot;,
+    &quot;Legal occupancy/permit history, applicable code edition, structure, MEP, fire alarm scope&quot;,
+    &quot;Whether stamped professional drawings/trade permits are required; internal checkpoint is not city acceptance&quot;
+  ],
+  &quot;nextSteps&quot;: [
+    &quot;Owner to engage licensed design professional for field survey and permit-history/code-edition review&quot;,
+    &quot;Professional to verify existing vs proposed partitions and dimensioned accessible route/clearances&quot;,
+    &quot;Fire alarm designer/contractor to provide coordination documentation&quot;,
+    &quot;User to assemble and submit applicant permit package outside this aid; no submission made here&quot;
+  ]
+}</pre></section><h2>Correction coverage and unresolved work</h2><p>No authoritative review-comment register is recorded.</p><h2>Current conceptual plan · revision 2</h2><p>Included in a current applicant approval. Suite dimensions are declared inputs, not field measurements; room geometry is proposed. This is not a permit drawing.</p><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Current conceptual floor plan" viewBox="-1 -1 62 42" style="max-height:420px;width:100%"><rect width="60" height="40" fill="#f5f6ef" stroke="#44543c" stroke-width=".2"/><rect x="0" y="34" width="60" height="6" fill="#e8e1c7"/><rect x="0" y="24" width="8" height="10" fill="#e8e1c7"/><g><rect x="0" y="0" width="34" height="22" fill="#dce3d3" stroke="#44543c" stroke-width=".15"/><text x="17" y="11" text-anchor="middle" font-size="1.2">Open workspace</text></g><g><rect x="34" y="0" width="13" height="16" fill="#dce3d3" stroke="#44543c" stroke-width=".15"/><text x="40.5" y="8" text-anchor="middle" font-size="1.2">Quiet office 1</text></g><g><rect x="47" y="0" width="13" height="16" fill="#dce3d3" stroke="#44543c" stroke-width=".15"/><text x="53.5" y="8" text-anchor="middle" font-size="1.2">Quiet office 2</text></g><g><rect x="18" y="22" width="26" height="12" fill="#dce3d3" stroke="#44543c" stroke-width=".15"/><text x="31" y="28" text-anchor="middle" font-size="1.2">Meeting room - 10 seats</text></g><line x1="3.5" y1="22" x2="6.5" y2="22" stroke="white" stroke-width=".5"/><line x1="36.5" y1="16" x2="39.5" y2="16" stroke="white" stroke-width=".5"/><line x1="50.5" y1="16" x2="53.5" y2="16" stroke="white" stroke-width=".5"/><line x1="28.5" y1="34" x2="31.5" y2="34" stroke="white" stroke-width=".5"/><line x1="28.5" y1="40" x2="31.5" y2="40" stroke="white" stroke-width=".5"/></svg><p>Existing-condition notes requiring verification: Existing office suite shell 60x40x10 ft preserved. No existing partitions, doors, structure, MEP, or exterior documented; field survey and permit history review required. Concept shows proposed partitions only.</p><h2>Independent review</h2><p>A separate Meta request reviewed each stage's drafts for unsupported claims, invented facts and overstated authority before its checkpoint. It cannot approve work or establish compliance; a responsible professional must still review.</p><section><h3>understanding — No misleading claims found</h3><p class="meta">Reviewed artifact versions: {&quot;understanding&quot;:1}</p></section><section><h3>design — No misleading claims found</h3><p class="meta">Reviewed artifact versions: {&quot;understanding&quot;:1,&quot;concept&quot;:2,&quot;strategy&quot;:2}</p><ul><li><strong>Advisory · strategy:</strong> Plans to distinguish existing and proposed partitions — see LS-1 — References sheet codes LS-1/LS-2 as required plan content without observed source; brief and retrieved excerpt do not establish these codes.</li><li><strong>Advisory · strategy:</strong> Fire alarm coordination documentation — see FA-1 — Presents fire-alarm coordination documentation as a strategy requirement without observed source in brief or retrieved excerpt; implies a defined submittal item FA-1.</li></ul></section><section><h3>preparation — No misleading claims found</h3><p class="meta">Reviewed artifact versions: {&quot;understanding&quot;:1,&quot;preparation&quot;:1}</p></section><section><h3>handoff — Agent revised the drafts after review</h3><p class="meta">Reviewed artifact versions: {&quot;preparation&quot;:1,&quot;handoff&quot;:1} · revised to {&quot;preparation&quot;:1,&quot;handoff&quot;:2}</p><ul><li><strong>Blocking · handoff:</strong> enlarged 10-seat meeting room next to suite entry — 10-seat occupancy, enlarged size, and entry location not in brief; preparation states existing partitions unknown pending survey, so enlarged/comparative and layout claims are unverified and contradict preparation.</li><li><strong>Blocking · handoff:</strong> open workspace at daylight side — Daylight/window location not in brief and listed as unverified missing info in preparation; presents unverified site condition as verified fact.</li><li><strong>Blocking · handoff:</strong> geometry checks pass — Presented as verified without observed source; brief states site conditions not verified and preparation states no compliance verified.</li><li><strong>Blocking · handoff:</strong> concept and permit strategy approved at design — Overstated authority: &#39;approved&#39; implies compliance/acceptance when all reviewer items are unresolved and no city submission was made.</li></ul></section><h2>Review checkpoints</h2><section><h3>Confirm the project understanding — approved</h3><p>Review the current proposal and assumptions. Give feedback to request a revision.</p><p class="meta">Artifact versions: {&quot;understanding&quot;:1}</p></section><section><h3>Review the design and permit strategy — rejected</h3><p>Review the current proposal and assumptions. Give feedback to request a revision.</p><p class="meta">Artifact versions: {&quot;understanding&quot;:1,&quot;concept&quot;:1,&quot;strategy&quot;:1}</p><pre>Enlarge the meeting room so it can seat ten and place it next to the suite entry. Keep both quiet offices.</pre></section><section><h3>Review the design and permit strategy — approved</h3><p>Review the current proposal and assumptions. Give feedback to request a revision.</p><p class="meta">Artifact versions: {&quot;understanding&quot;:1,&quot;concept&quot;:2,&quot;strategy&quot;:2}</p></section><section><h3>Review the handoff package — approved</h3><p>Review the current package, unresolved responsibilities and handoff contents. Approval does not issue a permit, submit to the city, or establish code compliance.</p><p class="meta">Artifact versions: {&quot;understanding&quot;:1,&quot;concept&quot;:2,&quot;strategy&quot;:2,&quot;preparation&quot;:1,&quot;handoff&quot;:2}</p></section><h2>Tasks</h2><ul><li><strong>Read the brief and project files</strong> — done. Agent work recorded; approval and external evidence remain separate.</li><li><strong>Develop the commercial concept and permit route</strong> — done. Agent work recorded; approval and external evidence remain separate.</li><li><strong>Coordinate evidence and prepare responses</strong> — done. Agent work recorded; approval and external evidence remain separate.</li><li><strong>Assemble the reviewed handoff</strong> — done. Agent work recorded; approval and external evidence remain separate.</li></ul><h2>Registered project files</h2><ul><li>fictional-office-brief.pdf · 1 pages · processed</li></ul><h2>External coordination</h2><p>No external messages or submission receipts are recorded.</p><h2>Source record</h2><section><h3><a href="https://www.portland.gov/ppd/commercial-permitting/commercial-requirements">Commercial permit application requirements</a></h3><p class="meta">Accessed 2026-10-30T21:51:22.440Z</p><pre>Commercial Permit Application Requirements Label: Guide Applying for a building permit for your commercial projects? You&amp;#039;ll need to submit specific documents and plans. Find submittal requirements for commercial projects for new construction, additions, alterations, and change of use or occupancy. On this page Depending on your project we may need more information or your project may not need all the items on this list. Please schedule a free 15-minute virtual meeting to discuss what you&#39;ll need for your project. For an overview of the commercial permit application process, visit Commercial New Construction and Addition Permits &amp; Inspections . Find requirements by project type Project types definitions: Alterations that have little* or no exterior changes to the building and no structural work. Alterations with a change of use or occupancy that have little* or no exterior changes to the building and no structural work. New construction, additions, and major exterior changes to the building. *Little or no exterior changes might include: Alterations that do not add floor area or increase building height. Alterations (other than repair and maintenance) that affect the facade area</pre></section><section><h3><a href="https://www.portland.gov/ppd/commercial-permitting/commercial-requirements">Commercial permit application requirements</a></h3><p class="meta">Accessed 2026-10-30T21:51:22.440Z</p><pre>Commercial Permit Application Requirements Label: Guide Applying for a building permit for your commercial projects? You&amp;#039;ll need to submit specific documents and plans. Find submittal requirements for commercial projects for new construction, additions, alterations, and change of use or occupancy. On this page Depending on your project we may need more information or your project may not need all the items on this list. Please schedule a free 15-minute virtual meeting to discuss what you&#39;ll need for your project. For an overview of the commercial permit application process, visit Commercial New Construction and Addition Permits &amp; Inspections . Find requirements by project type Project types definitions: Alterations that have little* or no exterior changes to the building and no structural work. Alterations with a change of use or occupancy that have little* or no exterior changes to the building and no structural work. New construction, additions, and major exterior changes to the building. *Little or no exterior changes might include: Alterations that do not add floor area or increase building height. Alterations (other than repair and maintenance) that affect the facade area</pre></section><section><h3><a href="https://www.portland.gov/ppd/commercial-permitting/commercial-requirements">Commercial permit application requirements</a></h3><p class="meta">Accessed 2026-10-30T21:51:22.440Z</p><pre>Commercial Permit Application Requirements Label: Guide Applying for a building permit for your commercial projects? You&amp;#039;ll need to submit specific documents and plans. Find submittal requirements for commercial projects for new construction, additions, alterations, and change of use or occupancy. On this page Depending on your project we may need more information or your project may not need all the items on this list. Please schedule a free 15-minute virtual meeting to discuss what you&#39;ll need for your project. For an overview of the commercial permit application process, visit Commercial New Construction and Addition Permits &amp; Inspections . Find requirements by project type Project types definitions: Alterations that have little* or no exterior changes to the building and no structural work. Alterations with a change of use or occupancy that have little* or no exterior changes to the building and no structural work. New construction, additions, and major exterior changes to the building. *Little or no exterior changes might include: Alterations that do not add floor area or increase building height. Alterations (other than repair and maintenance) that affect the facade area</pre></section><section><h3><a href="https://www.portland.gov/ppd/commercial-permitting/commercial-requirements">Commercial permit application requirements</a></h3><p class="meta">Accessed 2026-10-30T21:51:22.440Z</p><pre>Commercial Permit Application Requirements Label: Guide Applying for a building permit for your commercial projects? You&amp;#039;ll need to submit specific documents and plans. Find submittal requirements for commercial projects for new construction, additions, alterations, and change of use or occupancy. On this page Depending on your project we may need more information or your project may not need all the items on this list. Please schedule a free 15-minute virtual meeting to discuss what you&#39;ll need for your project. For an overview of the commercial permit application process, visit Commercial New Construction and Addition Permits &amp; Inspections . Find requirements by project type Project types definitions: Alterations that have little* or no exterior changes to the building and no structural work. Alterations with a change of use or occupancy that have little* or no exterior changes to the building and no structural work. New construction, additions, and major exterior changes to the building. *Little or no exterior changes might include: Alterations that do not add floor area or increase building height. Alterations (other than repair and maintenance) that affect the facade area</pre></section><section><h3><a href="https://www.portland.gov/ppd/commercial-permitting/commercial-requirements">Commercial permit application requirements</a></h3><p class="meta">Accessed 2026-10-30T21:51:22.440Z</p><pre>Commercial Permit Application Requirements Label: Guide Applying for a building permit for your commercial projects? You&amp;#039;ll need to submit specific documents and plans. Find submittal requirements for commercial projects for new construction, additions, alterations, and change of use or occupancy. On this page Depending on your project we may need more information or your project may not need all the items on this list. Please schedule a free 15-minute virtual meeting to discuss what you&#39;ll need for your project. For an overview of the commercial permit application process, visit Commercial New Construction and Addition Permits &amp; Inspections . Find requirements by project type Project types definitions: Alterations that have little* or no exterior changes to the building and no structural work. Alterations with a change of use or occupancy that have little* or no exterior changes to the building and no structural work. New construction, additions, and major exterior changes to the building. *Little or no exterior changes might include: Alterations that do not add floor area or increase building height. Alterations (other than repair and maintenance) that affect the facade area</pre></section><section><h3><a href="https://www.portland.gov/ppd/commercial-permitting/commercial-requirements">Commercial permit application requirements</a></h3><p class="meta">Accessed 2026-10-30T21:51:22.440Z</p><pre>Commercial Permit Application Requirements Label: Guide Applying for a building permit for your commercial projects? You&amp;#039;ll need to submit specific documents and plans. Find submittal requirements for commercial projects for new construction, additions, alterations, and change of use or occupancy. On this page Depending on your project we may need more information or your project may not need all the items on this list. Please schedule a free 15-minute virtual meeting to discuss what you&#39;ll need for your project. For an overview of the commercial permit application process, visit Commercial New Construction and Addition Permits &amp; Inspections . Find requirements by project type Project types definitions: Alterations that have little* or no exterior changes to the building and no structural work. Alterations with a change of use or occupancy that have little* or no exterior changes to the building and no structural work. New construction, additions, and major exterior changes to the building. *Little or no exterior changes might include: Alterations that do not add floor area or increase building height. Alterations (other than repair and maintenance) that affect the facade area</pre></section><h2>Path to the physical project</h2><p>Obtain the responsible professionals’ drawings and sign-off, authorized city submission, verified review/issuance records, and applicable inspections before treating the project as permitted or built. Schema records evidence; it does not create municipal authority.</p></body></html>

@@ -8,6 +8,10 @@ The main workspace has project conversation, current work and decisions. Both br
 
 Source replacement preserves historical material and review records. Only reviews whose source, response, comment or declared concept dependency changed become obsolete. Exact SHA-256 fingerprints prevent a user click from approving a different response version. Original file downloads require project ownership and verify stored bytes against the source hash. Research records retain retrieval time, supporting draft claim, extracted excerpt, content hash and a private snapshot when available; search citations are labeled separately. Neither source retrieval nor quotation matching proves project-specific requirements.
 
+## Independent critic
+
+Before a stage reaches its checkpoint, a separate Meta request with no project tools reviews that stage's saved drafts. It looks for unsupported claims, invented facts, contradictions and overstated authority. Findings are stored on the project as `critiques` with the exact artifact revisions reviewed. A blocking finding sends the agent back for one revision round. The critique then records `revised` (with the new revisions) or `unaddressed`. The critic shares the stage's model and tool budgets, uses the same durable response polling and fail-opens to `unavailable` when its output is unreadable or the budget is spent. It never approves or blocks a checkpoint. The handoff export lists the latest critique for each stage. `SCHEMA_CRITIC=off` disables it.
+
 ## Durable execution
 
 Fenced leases, persisted provider IDs/history, tool outcomes, event receipts, optimistic concurrency and immutable R2 snapshots protect resumed work. The runner can perform multiple bounded exchanges in one invocation and stops at approval/input gates. Authorized API actions also start a short server-owned batch with Cloudflare `waitUntil`; this is a bounded kick, not a perpetual worker.
