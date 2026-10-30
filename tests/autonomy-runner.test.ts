@@ -201,3 +201,9 @@ test('other incomplete replies still stop safely',async()=>{
  const {repo,project,job}=await setup();globalThis.fetch=async()=>response({id:'resp_filtered',status:'incomplete',incomplete_details:{reason:'content_filter'},output:[]});
  await advanceJob(repo,env,job.id);assert.equal((await repo.getProject(project.id))!.status,'blocked');
 });
+
+test('the critic sees the user requests and computed geometry checks, not just the brief',async()=>{
+ const {repo,project,job}=await setup();const p=(await repo.getProject(project.id))!;p.messages.push({id:'m_feedback',role:'user',text:'Make the meeting room seat ten next to the entry.',createdAt:new Date().toISOString()});p.version++;await repo.saveProject(p,project.version);job.projectVersion=p.version;await repo.saveJob(job);
+ const seen=scripted([...draftUnderstanding],[done([call('record_critique',{findings:[]})],'crit_ctx')]);
+ assert.equal((await drive(repo,job.id)).status,'needs_approval');const text=seen.criticBodies[0].input[0].content[0].text;assert.match(text,/seat ten next to the entry/);assert.match(text,/"computedGeometryChecks":null/);assert.match(seen.criticBodies[0].instructions,/user's own messages/);
+});

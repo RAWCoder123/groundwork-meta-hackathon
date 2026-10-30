@@ -39,7 +39,8 @@ if (!state.integrations.metaConfigured) throw new Error("No Meta key is configur
 
 const record = { recordedAt: new Date().toISOString(), evidenceClass: "local live Meta run (fictional project)", base, model: "muse-spark-1.3", projectId: "", steps: [] as unknown[], critiques: [] as unknown[], decisions: [] as unknown[], packet: null as unknown, outcome: "incomplete", failure: null as string | null };
 const out = (name: string) => root + "docs/" + name;
-const save = () => writeFileSync(out("live-run-record.json"), JSON.stringify(record, null, 2) + "\n");
+const recordName = process.env.SMOKE_RECORD ?? "live-run-record";
+const save = () => writeFileSync(out(`${recordName}.json`), JSON.stringify(record, null, 2) + "\n");
 const bundle = async (id: string) => (await api<{ project: Project }>(`/api/autonomy/projects/${id}/bundle`)).project;
 
 async function settle(id: string, label: string): Promise<Project> {
@@ -98,7 +99,7 @@ try {
   p = await decide(p, "package");
   p = await bundle(p.id);
   const packet = await api<string>(`/api/autonomy/projects/${p.id}/packet`);
-  writeFileSync(out("live-run-handoff.html"), packet);
+  writeFileSync(out(`${recordName.replace("record", "handoff")}.html`), packet);
   record.packet = { bytes: packet.length, projectRevision: p.version, matchesRevision: packet.includes(`PROJECT REVISION ${p.version}`), includesIndependentReview: packet.includes("Independent review") };
   record.critiques = (p.critiques ?? []).map(c => ({ stage: c.stage, status: c.status, blocking: c.findings.filter(f => f.severity === "blocking").length, advisory: c.findings.filter(f => f.severity === "advisory").length, note: c.note }));
   record.decisions.push(...p.decisions.map(d => ({ kind: d.kind, status: d.status, artifactVersions: d.artifactVersions })));
@@ -110,5 +111,5 @@ try {
   process.exitCode = 1;
 } finally {
   save();
-  log(`Evidence: docs/live-run-record.json`);
+  log(`Evidence: docs/${recordName}.json`);
 }
