@@ -1,0 +1,62 @@
+{
+  "recordedAt": "2026-10-30T07:34:12.305333+00:00",
+  "testedRuntimeCommit": "084ca7189619920a641dd21e5893afd5ff169d63",
+  "checks": {
+    "tests": {
+      "passed": 192,
+      "failed": 0
+    },
+    "officialSiteBuild": "passed",
+    "artifactValidation": "passed",
+    "diffCheck": "passed",
+    "impeccableDetector": "no findings",
+    "browserErrors": 0
+  },
+  "browser": {
+    "environment": "local development with controlled fictional data",
+    "viewports": [
+      {
+        "width": 1280,
+        "height": 720
+      },
+      {
+        "width": 390,
+        "height": 844
+      },
+      {
+        "width": 320,
+        "height": 720
+      }
+    ],
+    "actualViewportAndNoHorizontalPageOverflowVerified": true,
+    "observed": [
+      "correction coverage and visible per-response status",
+      "saved-state activity and recent persisted events",
+      "linked 2D and 3D concept view",
+      "recovery disclosure",
+      "preferences and connections",
+      "new-project entry"
+    ],
+    "images": [
+      "polish-desktop-concept.jpg",
+      "polish-mobile-concept.jpg"
+    ]
+  },
+  "limits": [
+    "Hosted server now sees the key; authenticated model stage still requires verification",
+    "No real permitting, practitioner or external-message acceptance",
+    "Local browser evidence does not establish hosted sign-in acceptance",
+    "Prior backend acceptance remains separately recorded in verification-record.json"
+  ],
+  "hostedPublication": {
+    "version": 7,
+    "runtimeSourceCommit": "0c43e66611284ba027510f14f5e9c85d45f39a41",
+    "deploymentId": "appgdep_6ae4d8b90cac8191b620ef9aceef1342",
+    "status": "succeeded",
+    "environmentRevision": 7,
+    "audience": "public; preserved existing policy",
+    "metaConfigured": true,
+    "storageReady": true,
+    "authenticatedModelStage": "pending saved-work retry"
+  }
+}

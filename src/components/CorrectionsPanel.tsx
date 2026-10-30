@@ -84,17 +84,19 @@ export function CorrectionsPanel({
         </p>
       ) : (
         <>
-          <p>
+          <div className="sa-correction-summary">
             <strong>
               {report.coverage} of {report.total} comments accounted for.
-            </strong>{" "}
+            </strong>
+            <span>
             {report.confirmed
               ? "Register confirmed."
               : "Register needs your completeness review."}{" "}
             {report.responseSetReviewed
               ? "Applicant responses and source support reviewed; city acceptance remains unverified."
               : "Coordination handoff only; unresolved work remains."}
-          </p>
+            </span>
+          </div>
           <p>
             {report.duplicateNumbers
               ?.map(
@@ -336,17 +338,25 @@ export function CorrectionsPanel({
             </div>
           )}
           {error && <p role="alert">{error}</p>}
-          <ul className="sa-correction-issues">
+          {report.issues.length > 0 && <details className="sa-review-checks">
+            <summary>{report.issues.length} checks need attention</summary>
+            <ul className="sa-correction-issues">
             {report.issues.map((issue, i) => (
               <li key={i}>{issue.detail}</li>
             ))}
-          </ul>
+            </ul>
+          </details>}
           {report.items.map((item) => (
             <article className="sa-correction-row" key={item.comment.id}>
+              <div className="sa-correction-heading">
               <h3>
                 {item.comment.discipline || "Unassigned discipline"} ·{" "}
                 {item.comment.number}
               </h3>
+              <span className={`sa-review-label ${item.reviewed ? "reviewed" : ""}`}>
+                {item.reviewed ? "Reviewed" : item.draft ? "Review needed" : "Draft missing"}
+              </span>
+              </div>
               <p>{item.comment.wording}</p>
               {evidence(item.comment.source)}
               <p>Responsible: {item.comment.responsible || "Not assigned"}</p>

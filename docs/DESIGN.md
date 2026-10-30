@@ -14,10 +14,18 @@ The primary surface is an operational commercial project workspace, not a market
 
 ## Visual system
 
-Canvas `#f5f6f2`, white surfaces, graphite `#29342c`, primary olive `#44543c`, fine borders `#e1e5dc`. The correction surface uses readable 14px body text, 20px section headings and 16px reviewer-item headings, with 44px primary controls. Existing chrome retains its established compact typography. Use distinct wording and icons as well as color for status.
+Canvas `#f3f4ef`, white surfaces, graphite `#29342c`, primary olive `#44543c`, fine borders `#dfe3d9`. The correction surface uses readable 14px body text, 20px section headings and 16px reviewer-item headings, with 44px primary controls. Conversation and proposal body text use 14px. Primary controls use 42–44px targets; secondary chrome stays compact. Focus, selection and caret colors follow the olive palette. Use distinct wording and icons as well as color for status.
 
-The desktop workspace uses three connected columns. Existing styles stack panels below 850px and prioritize pending decisions. Browser verification records identify actual observed viewports; source media queries alone are not proof of mobile acceptance.
+The desktop workspace uses three connected columns. Below 1150px the workspace uses two columns; below 800px it stacks in DOM order with panel jump links. The project selector truncates long names without widening the viewport. Browser verification records identify actual observed viewports; source media queries alone are not proof of mobile acceptance.
 
 `corrections-controlled-ui.png` is a controlled local fixture showing repeated reviewer numbering, one omitted response, missing support and a replaced drawing. It is not live Meta evidence. `autonomy-controlled-ui.png` preserves the earlier conceptual design fixture. `design-concept.png` is the original development reference image, not the current product or a Meta runtime capability.
 
 The retained `/legacy` manual permit desk and residential study have separate domain models. Their R5 demonstration rules are not commercial requirements and should not shape the commercial interface's claims.
+
+## Calm architectural studio polish
+
+A state-derived activity band names what needs attention, what Schema is working on, or which checkpoint is waiting. Its recent activity list uses persisted events, with neutral markers rather than implying every event is a success. No timer, heartbeat or missing Meta key produces a working animation. Three restrained bars move only while the saved state is runnable and the page is visible; reduced motion disables them.
+
+The conversation, current proposal and decision queue use flatter internal rows, readable spacing and quiet dividers. Recovery actions expand beneath the activity band. Correction checks collapse into a labeled disclosure while comment coverage and each response's review status stay visible. Confirmed active preferences can be opened directly from the conversation.
+
+Proposal tabs expose selection; the main region has a skip link. The 2D/3D concept shares the same model and has larger controls and a responsive canvas. Browser checks at 1280, 390 and 320 CSS pixels verified the actual viewport and page width, with no horizontal page overflow. `polish-desktop-concept.jpg` and `polish-mobile-concept.jpg` show a deterministic local fictional fixture, not live Meta or permit evidence.

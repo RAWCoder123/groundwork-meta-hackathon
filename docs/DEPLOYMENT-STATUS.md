@@ -1,3 +1,11 @@
+# Latest workspace polish — October 30, 2026
+
+Version 7 contains the architectural workspace polish. Runtime source: `0c43e66611284ba027510f14f5e9c85d45f39a41`; tested executable source: `084ca7189619920a641dd21e5893afd5ff169d63`. All 192 tests, the official build and artifact validation passed. Desktop and mobile browser evidence is in `polish-verification.json`.
+
+The Site access policy was independently changed to public before this publication; this release preserves that policy. Project records still require sign-in and remain owner-scoped. Public access does not grant database administration or shared-case editing. Version 7 published successfully with configuration revision 7. Hosted runner status now reports `metaConfigured: true` and `storageReady: true`. This verifies server key availability, not a successful authenticated model stage. Previously blocked projects require Retry saved work.
+
+## Previous release record
+
 # Hosted status — October 30, 2026
 
 The existing owner-private Site is https://groundwork-adus.raymondaw2006.chatgpt.site/. Public source is https://github.com/RAWCoder123/groundwork-meta-hackathon. Publication preserves the Site identity, audience, D1/R2 bindings and legacy route. Version 6 deployed successfully on October 30, 2026. Runtime source commit: `dfb52ff03aa2af2ab01022de342d1d94f5170878`; tested executable source: `3d5878aa711a82e50252c678b5e41a082a44dbb3`. The difference is the documentation-only verification record. The share package records this public documentation commit separately.

@@ -81,3 +81,7 @@ Concepts are decision aids, not professionally prepared permit drawings. No comp
 Development began October 27, 2026. Application-specific work is identified in [the contribution and demo record](docs/HACKATHON.md) and public Git history. Third-party dependencies, hosting starter material and the earlier interface reference image are not original Meta runtime capabilities.
 
 Original Schema code is provided under the [MIT license](LICENSE). Dependencies and starter material retain their own licenses. Examples are fictional; no private project records or credentials are included.
+
+### Workspace polish
+
+The calm architectural workspace now shows saved agent activity, review checkpoints, expandable recovery controls and confirmed preferences. Linked concept controls adapt to desktop and mobile. The polish passed 192 tests, the production build, artifact validation and browser checks at 1280, 390 and 320 CSS pixels. See [the verification record](docs/polish-verification.json) and [design guidance](docs/DESIGN.md). Screenshots use controlled fictional data; they are not live Meta or permit evidence.

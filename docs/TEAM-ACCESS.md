@@ -79,3 +79,7 @@ npm run validate
 Document any data migration and recovery implications. Use synthetic examples in the public repository. The owner publishes through the supported Sites workflow, which applies pending hosted schema migrations. A fork must obtain its own Site identity instead of publishing over the original `.openai/hosting.json` project ID.
 
 The current deployed runtime is version 6. Live Meta acceptance, meaningful closed-tab advancement and native Gmail delivery remain separately unverified; see [deployment status](DEPLOYMENT-STATUS.md).
+
+## October 30 access update
+
+The live demo now has a public Site access policy (changed independently of the polish release). Teammates can open the demo URL; project records remain sign-in protected and owner-scoped. GitHub write invitations were sent to `amandula0803` and `vkbvkb744-wq`; each recipient must accept. No database administrator access or shared-case editing has been granted.
