@@ -1,3 +1,21 @@
+# Live Meta acceptance — October 30, 2026 (local)
+
+`scripts/live-smoke.ts` drove the real API on a local dev server with a real Muse Spark 1.3 key in the ignored `.dev.vars`. The flow covered the fictional office brief and PDF, understanding approval, design, layout feedback, design approval, preparation, handoff, package approval and handoff export. Three consecutive runs passed:
+
+- `5e69f61`: passed. Five critiques, all clear.
+- `5e69f61`: passed in 489 s. At the handoff, the critic raised four blocking findings and the agent revised the handoff (revision 1 → 2). Evidence: `live-run-record.json` and `live-run-handoff.html`.
+- `34e8a2f` (critic receives the user's requests and geometry results): passed with five clear critiques. Evidence: `live-run-record-final.json` and `live-run-handoff-final.html`.
+
+In every passing run, feedback retired the earlier design checkpoint and advanced the concept revision. The export matched the project revision and included the independent review section.
+
+The first two attempts found real defects that are now fixed:
+- A brief-led project was offered the reviewer register tool.
+- Reasoning used the whole 4000-token output budget (`incomplete`, `max_output_tokens`), which blocked the stage.
+
+Meta's Responses API accepts only `tool_choice: "auto"`.
+
+This is local evidence. Hosted signed-in acceptance, unattended closed-tab progress and judge access are still separate checks.
+
 # Current release: version 8
 
 Published October 30, 2026 from `88e47636d2e66e94445e65fbc7dffd43cfc931d3`. Added caller-scoped background execution and saved-work status/retry tools. 195 tests, production build and artifact validation passed. See [production checks](PRODUCTION-CHECKS.md) for direct verification and outstanding acceptance.

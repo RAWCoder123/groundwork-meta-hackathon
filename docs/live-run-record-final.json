@@ -1,0 +1,188 @@
+{
+  "recordedAt": "2026-10-30T21:59:05.673Z",
+  "evidenceClass": "local live Meta run (fictional project)",
+  "base": "http://127.0.0.1:5199",
+  "model": "muse-spark-1.3",
+  "projectId": "project_606f8312-9e80-42c7-871d-e42b20dfe21a",
+  "steps": [
+    {
+      "label": "understanding",
+      "seconds": 69,
+      "stage": "understanding",
+      "status": "needs_approval",
+      "version": 5,
+      "artifacts": {
+        "understanding": 1
+      },
+      "eventCounts": {
+        "project_created": 1,
+        "feedback_received": 1,
+        "document_registered": 1,
+        "artifact_updated": 1,
+        "agent_tool": 1,
+        "critic_review": 1,
+        "approval_requested": 1
+      }
+    },
+    {
+      "label": "design",
+      "seconds": 156,
+      "stage": "design",
+      "status": "needs_approval",
+      "version": 11,
+      "artifacts": {
+        "understanding": 1,
+        "concept": 1,
+        "strategy": 1
+      },
+      "eventCounts": {
+        "project_created": 1,
+        "feedback_received": 1,
+        "document_registered": 1,
+        "artifact_updated": 3,
+        "agent_tool": 4,
+        "critic_review": 2,
+        "approval_requested": 2,
+        "checkpoint_approved": 1,
+        "official_research": 1
+      }
+    },
+    {
+      "label": "design revision",
+      "seconds": 115,
+      "stage": "design",
+      "status": "needs_approval",
+      "version": 16,
+      "artifacts": {
+        "understanding": 1,
+        "concept": 2,
+        "strategy": 2
+      },
+      "eventCounts": {
+        "project_created": 1,
+        "feedback_received": 2,
+        "document_registered": 1,
+        "artifact_updated": 5,
+        "agent_tool": 6,
+        "critic_review": 3,
+        "approval_requested": 3,
+        "checkpoint_approved": 1,
+        "official_research": 1,
+        "concept_change_summary": 1
+      }
+    },
+    {
+      "label": "preparation and handoff",
+      "seconds": 155,
+      "stage": "handoff",
+      "status": "needs_approval",
+      "version": 24,
+      "artifacts": {
+        "understanding": 1,
+        "concept": 2,
+        "strategy": 2,
+        "preparation": 1,
+        "handoff": 1
+      },
+      "eventCounts": {
+        "project_created": 1,
+        "feedback_received": 2,
+        "document_registered": 1,
+        "artifact_updated": 7,
+        "agent_tool": 9,
+        "critic_review": 5,
+        "approval_requested": 4,
+        "checkpoint_approved": 2,
+        "official_research": 2,
+        "concept_change_summary": 1,
+        "stage_advanced": 1
+      }
+    }
+  ],
+  "critiques": [
+    {
+      "stage": "understanding",
+      "status": "clear",
+      "blocking": 0,
+      "advisory": 0
+    },
+    {
+      "stage": "design",
+      "status": "clear",
+      "blocking": 0,
+      "advisory": 0
+    },
+    {
+      "stage": "design",
+      "status": "clear",
+      "blocking": 0,
+      "advisory": 0
+    },
+    {
+      "stage": "preparation",
+      "status": "clear",
+      "blocking": 0,
+      "advisory": 0
+    },
+    {
+      "stage": "handoff",
+      "status": "clear",
+      "blocking": 0,
+      "advisory": 0
+    }
+  ],
+  "decisions": [
+    {
+      "check": "feedback retires earlier design checkpoint",
+      "earlierStatus": "rejected",
+      "conceptRevision": [
+        1,
+        2
+      ]
+    },
+    {
+      "kind": "understanding",
+      "status": "approved",
+      "artifactVersions": {
+        "understanding": 1
+      }
+    },
+    {
+      "kind": "design",
+      "status": "rejected",
+      "artifactVersions": {
+        "understanding": 1,
+        "concept": 1,
+        "strategy": 1
+      }
+    },
+    {
+      "kind": "design",
+      "status": "approved",
+      "artifactVersions": {
+        "understanding": 1,
+        "concept": 2,
+        "strategy": 2
+      }
+    },
+    {
+      "kind": "package",
+      "status": "approved",
+      "artifactVersions": {
+        "understanding": 1,
+        "concept": 2,
+        "strategy": 2,
+        "preparation": 1,
+        "handoff": 1
+      }
+    }
+  ],
+  "packet": {
+    "bytes": 38467,
+    "projectRevision": 25,
+    "matchesRevision": true,
+    "includesIndependentReview": true
+  },
+  "outcome": "passed",
+  "failure": null
+}
