@@ -1,70 +1,92 @@
-import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react";
-import { handleApi } from "./server/api";
-import { handleIntake } from "./server/intake";
-import { handlePermits } from "./server/permits";
+import vinext from "vinext";
+import { defineConfig } from "vite";
+import hostingConfig from "./.openai/hosting.json";
+import { readExecutionProfile } from "./scripts/execution-profile.mjs";
+import { configureToolEnvironment } from "./scripts/tool-environment.mjs";
+import { sites } from "./scripts/vite/sites-vite-plugin";
+import { connectorPreview } from "./scripts/vite/connector-preview-plugin.mjs";
 
-export default defineConfig(({ mode }) => {
-  const env = { ...loadEnv(mode, process.cwd(), ""), ...process.env };
-  return {
-    plugins: [
-      react(),
-      {
-        name: "groundwork-local-api",
-        configureServer(server) {
-          server.middlewares.use("/api", async (req, res) => {
-            try {
-              const chunks: Buffer[] = [];
-              let bytes = 0;
-              const limit =
-                req.url?.split("?")[0] === "/intake" ? 5_700_000 : 100_000;
-              for await (const chunk of req) {
-                bytes += chunk.length;
-                if (bytes > limit) {
-                  res.writeHead(413);
-                  res.end("Request too large");
-                  return;
-                }
-                chunks.push(Buffer.from(chunk));
-              }
-              const origin = "http://" + (req.headers.host || "127.0.0.1:5173");
-              const headers = new Headers();
-              for (const [key, value] of Object.entries(req.headers))
-                if (value)
-                  headers.set(
-                    key,
-                    Array.isArray(value) ? value.join(", ") : value,
-                  );
-              const request = new Request(origin + "/api" + req.url, {
-                method: req.method,
-                headers,
-                ...(req.method !== "GET" && req.method !== "HEAD"
-                  ? { body: Buffer.concat(chunks) }
-                  : {}),
-              });
-              const response =
-                new URL(request.url).pathname === "/api/intake"
-                  ? await handleIntake(request, env)
-                  : new URL(request.url).pathname === "/api/permits"
-                    ? await handlePermits(request, env)
-                  : await handleApi(request, env);
-              res.writeHead(
-                response.status,
-                Object.fromEntries(response.headers),
-              );
-              res.end(Buffer.from(await response.arrayBuffer()));
-            } catch {
-              res.writeHead(500, { "Content-Type": "application/json" });
-              res.end(
-                JSON.stringify({
-                  error: "The local server could not complete this request.",
-                }),
-              );
-            }
-          });
+const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
+  "00000000-0000-4000-8000-000000000000";
+
+const { d1, r2 } = hostingConfig;
+
+// macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
+const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
+const managedLinux = readExecutionProfile() === "managed-linux";
+
+const localBindingConfig = {
+  main: "./worker/index.ts",
+  compatibility_flags: ["nodejs_compat"],
+  d1_databases: d1
+    ? [
+        {
+          binding: d1,
+          database_name: "site-creator-d1",
+          database_id: SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
         },
-      },
+      ]
+    : [],
+  r2_buckets: r2
+    ? [
+        {
+          binding: r2,
+          bucket_name: "site-creator-r2",
+        },
+      ]
+    : [],
+};
+
+export default defineConfig(async ({ command }) => {
+  configureToolEnvironment(process.cwd());
+
+  // Wrangler snapshots its log path while the Cloudflare plugin is imported.
+  const { cloudflare } = await import("@cloudflare/vite-plugin");
+
+  return {
+    server: {
+      ...(managedLinux
+        ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }
+        : {}),
+      ...(isCodexSeatbeltSandbox
+        ? { watch: { useFsEvents: false, usePolling: true } }
+        : {}),
+    },
+    plugins: [
+      vinext(),
+      sites({ mockAuth: !managedLinux }),
+      connectorPreview(),
+      cloudflare({
+        viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
+        inspectorPort: false,
+        config: {
+          ...localBindingConfig,
+          ...(command === "serve"
+            ? {
+                services: [
+                  {
+                    binding: "CONNECTORS",
+                    service: "sites-connector-preview",
+                    entrypoint: "ConnectorPreview",
+                  },
+                ],
+              }
+            : {}),
+        },
+        ...(command === "serve"
+          ? {
+              auxiliaryWorkers: [
+                {
+                  config: {
+                    name: "sites-connector-preview",
+                    main: "./scripts/connector-preview/worker.mjs",
+                    compatibility_date: "2026-05-15",
+                  },
+                },
+              ],
+            }
+          : {}),
+      }),
     ],
-    build: { outDir: "build/client", emptyOutDir: true },
   };
 });

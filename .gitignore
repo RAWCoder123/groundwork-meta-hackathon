@@ -6,3 +6,11 @@ build/
 .DS_Store
 .sites/
 work/
+
+.next/
+.vinext/
+.wrangler/
+.sites-runtime/
+.dev.vars*
+*.tsbuildinfo
+next-env.d.ts

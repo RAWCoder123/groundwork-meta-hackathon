@@ -1,0 +1,37 @@
+export type Stage = 'understanding' | 'design' | 'preparation' | 'handoff';
+export type ProjectStatus = 'running' | 'needs_approval' | 'needs_input' | 'blocked' | 'paused' | 'awaiting_external';
+export type Point = {x:number;y:number};
+export type OfficeRoom = {id:string;name:string;x:number;y:number;width:number;depth:number;kind:'office'|'meeting'|'open'|'support'};
+export type OfficeDoor = {id:string;x:number;y:number;width:number;wall:'north'|'south'|'east'|'west';roomId:string|null};
+export type OfficeConcept = {units:'ft';width:number;depth:number;height:number;rooms:OfficeRoom[];doors:OfficeDoor[];circulation:{x:number;y:number;width:number;depth:number}[];existingNotes:string;assumptions:string[]};
+export type SourceRef = {url:string;title:string;accessedAt:string;quote?:string};
+export type DocumentRef = {id:string;name:string;objectKey:string;sha256:string;bytes:number;pages:number;status:'uploaded'|'processed'|'needs_review'|'failed';metaFileId?:string;excerpts:{page:number;text:string}[];warnings:string[];createdAt:string};
+export type ArtifactKind = 'understanding'|'concept'|'strategy'|'preparation'|'handoff';
+export type Artifact = {id:string;kind:ArtifactKind;revision:number;title:string;data:Record<string,unknown>;dependsOn:Record<string,number>;sources:SourceRef[];createdAt:string};
+export type Decision = {id:string;kind:'understanding'|'design'|'package'|'external';status:'pending'|'approved'|'rejected'|'stale';title:string;summary:string;artifactVersions:Record<string,number>;createdAt:string;decidedAt?:string;feedback?:string};
+export type Task = {id:string;title:string;status:'queued'|'working'|'done'|'blocked';detail:string;stage:Stage};
+export type Conversation = {id:string;role:'user'|'agent'|'system';text:string;createdAt:string};
+export type ProjectEvent = {id:string;type:string;detail:string;createdAt:string};
+export type MailAction = {id:string;revision:number;to:string;subject:string;body:string;artifactVersions:Record<string,number>;attachmentIds:string[];status:'draft'|'approved'|'sending'|'sent'|'uncertain'|'failed'|'stale';decisionId:string;receipt?:{provider:string;messageId:string;threadId?:string;sentAt:string};lastError?:string};
+export type AutoProject = {schemaVersion:1;id:string;ownerId:string;version:number;title:string;brief:string;stage:Stage;status:ProjectStatus;createdAt:string;updatedAt:string;documents:DocumentRef[];artifacts:Artifact[];decisions:Decision[];tasks:Task[];messages:Conversation[];events:ProjectEvent[];mail:MailAction[];questions:string[];recipient:{name:string;email:string}|null;inboxStatus:'not_connected'|'waiting_for_refresh'|'connected';blockedReason?:string;pauseState?:{fromVersion:number;targetVersion:number;pausedAt:string}};
+export type Preference = {id:string;ownerId:string;scope:'project'|'reusable';projectId:string|null;category:'language'|'explanation'|'layout'|'design';text:string;status:'provisional'|'active'|'disabled';originDecisionId:string;createdAt:string;updatedAt:string;deletedAt?:string;userEdited?:boolean};
+export type StageJob = {id:string;projectId:string;stage:Stage;status:'queued'|'waiting_provider'|'running'|'done'|'blocked'|'cancelled';projectVersion:number;modelRequests:number;toolExecutions:number;retries:number;startedAt:string;updatedAt:string;nextRunAt:string;responseId?:string;history:unknown[];completedCallIds:string[];lastError?:string;leaseToken?:string;leaseUntil?:number};
+export type ToolReceipt = {key:string;jobId:string;callId:string;result:unknown;createdAt:string};
+export type IntegrationStatus = {metaConfigured:boolean;storageReady:boolean;gmail:{eligible:boolean;connected:boolean;reason:string};background:{configured:boolean;lastTickAt:string|null;verified:boolean};limits:{modelRequests:number;toolExecutions:number;minutes:number}};
+export interface Repository {
+ createProject(project:AutoProject):Promise<void>;
+ getProject(id:string):Promise<AutoProject|null>;
+ listProjects(ownerId:string):Promise<AutoProject[]>;
+ saveProject(project:AutoProject,expectedVersion:number):Promise<boolean>;
+ getJob(id:string):Promise<StageJob|null>;
+ saveJob(job:StageJob,leaseToken?:string):Promise<boolean>;
+ checkpointJob(job:StageJob,leaseToken:string):Promise<boolean>;
+ claimJob(jobId:string,leaseToken:string,now:number,leaseMs:number):Promise<StageJob|null>;
+ runnableJobs(limit:number):Promise<StageJob[]>;
+ getPreferences(ownerId:string):Promise<Preference[]>;
+ putPreference(preference:Preference):Promise<void>;
+ deletePreference(ownerId:string,id:string):Promise<void>;
+ getReceipt(key:string):Promise<ToolReceipt|null>;
+ recordReceiptIfAbsent(receipt:ToolReceipt):Promise<boolean>;
+}
+export type AutoEnvironment = {MODEL_API_KEY?:string;[key:string]:unknown};

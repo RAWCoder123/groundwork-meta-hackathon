@@ -1,25 +1,16 @@
-import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
-
-const projectRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const workerPath = resolve(projectRoot, "dist/server/index.js");
-const manifestPath = resolve(projectRoot, "dist/.openai/hosting.json");
-
-const [source, manifest] = await Promise.all([
-  readFile(workerPath, "utf8"),
-  readFile(manifestPath, "utf8"),
-]);
-JSON.parse(manifest);
-
-// A data URL forces ESM parsing even though the generated output has no package.json.
-const moduleUrl = `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;
-const workerModule = await import(moduleUrl);
-assert.equal(
-  typeof workerModule.default?.fetch,
-  "function",
-  `${pathToFileURL(workerPath)} must export default.fetch`,
-);
-
-console.log("Artifact is valid ESM and exports default.fetch");
+import assert from 'node:assert/strict';
+import {readFile,access} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {build} from 'esbuild';
+const root=resolve(import.meta.dirname,'..');
+const entry=resolve(root,'dist/server/index.js');
+const manifest=JSON.parse(await readFile(resolve(root,'dist/.openai/hosting.json'),'utf8'));
+assert.equal(manifest.project_id,'appgprj_6ae1154e9f68819184ff085114bd80b6');
+assert.equal(manifest.d1,'DB');assert.equal(manifest.r2,'BUCKET');
+assert.ok(manifest.capabilities?.includes('mcp'));
+await access(resolve(root,'dist/server/wrangler.json'));
+const journal=JSON.parse(await readFile(resolve(root,'dist/.openai/drizzle/meta/_journal.json'),'utf8'));
+assert.ok(journal.entries.length>0,'Durable schema migrations must be packaged');
+for(const migration of journal.entries)await access(resolve(root,`dist/.openai/drizzle/${migration.tag}.sql`));
+await build({entryPoints:[entry],bundle:true,write:false,platform:'node',format:'esm',external:['cloudflare:*','node:*'],logLevel:'silent'});
+console.log('Vinext Worker parses; Site identity, storage bindings, and migrations are packaged.');
