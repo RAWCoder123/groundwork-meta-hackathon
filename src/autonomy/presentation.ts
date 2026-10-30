@@ -7,6 +7,18 @@ const stageWork = {
   handoff: "Preparing the reviewed handoff",
 };
 
+// Known runner blockers get a plain-language title; the saved reason stays in project details.
+const blockers = [
+  { match: /server Meta connection|MODEL_API_KEY/, title: "Connect Meta to continue", detail: "Your project is saved. Add the server Meta key, then retry saved work." },
+  { match: /time or execution limit|tool execution limit|model context request limit/, title: "This run reached its limit", detail: "Saved work is kept. Review progress, then start a new bounded attempt if needed." },
+  { match: /temporarily unavailable|could not be reached|rate limited/, title: "Meta is temporarily unavailable", detail: "Saved work is kept. Retry saved work when you’re ready." },
+];
+const reviewLabels = { clear: "no misleading claims found", revised: "Schema revised its drafts in response", revision_requested: "a revision is in progress", unaddressed: "findings remain unaddressed", unavailable: "it did not run for this stage" } as const;
+function reviewSummary(project: AutoProject) {
+  const critique = [...(project.critiques ?? [])].reverse().find(c => c.stage === project.stage);
+  return critique ? ` Independent review: ${reviewLabels[critique.status]}.` : "";
+}
+
 /** Presentation follows saved state. A configured timer is not proof of work. */
 export function agentPresentation(project: AutoProject, connections: IntegrationStatus) {
   const pending = project.decisions.find(d => d.status === "pending" && d.kind !== "external");
@@ -15,14 +27,18 @@ export function agentPresentation(project: AutoProject, connections: Integration
     tone: "quiet", active: false, title: "Paused by you",
     detail: "Your work is saved. Resume when you’re ready; the current run keeps its progress and limits.",
   } as const;
-  if (project.status === "blocked") return {
-    tone: "attention", active: false, title: "Attention needed",
-    detail: project.blockedReason || "Review the saved progress and resolve the blocker before continuing.",
-  } as const;
+  if (project.status === "blocked") {
+    const reason = project.blockedReason ?? "";
+    const known = blockers.find(b => b.match.test(reason));
+    return {
+      tone: "attention", active: false, title: known?.title ?? "Attention needed",
+      detail: known?.detail ?? (reason || "Review the saved progress and resolve the blocker before continuing."),
+    } as const;
+  }
   if (project.status === "needs_approval" || registerNeedsReview) return {
     tone: "review", active: false,
     title: registerNeedsReview ? "The comment register needs your review" : pending?.title || "Your review is needed",
-    detail: "Schema is waiting at a checkpoint. Review the current work before the next stage continues.",
+    detail: `Schema is waiting at a checkpoint. Review the current work before the next stage continues.${reviewSummary(project)}`,
   } as const;
   if (project.status === "needs_input") return {
     tone: "review", active: false, title: "A few answers are needed",

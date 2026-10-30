@@ -29,3 +29,13 @@ A state-derived activity band names what needs attention, what Schema is working
 The conversation, current proposal and decision queue use flatter internal rows, readable spacing and quiet dividers. Recovery actions expand beneath the activity band. Correction checks collapse into a labeled disclosure while comment coverage and each response's review status stay visible. Confirmed active preferences can be opened directly from the conversation.
 
 Proposal tabs expose selection; the main region has a skip link. The 2D/3D concept shares the same model and has larger controls and a responsive canvas. Browser checks at 1280, 390 and 320 CSS pixels verified the actual viewport and page width, with no horizontal page overflow. `polish-desktop-concept.jpg` and `polish-mobile-concept.jpg` show a deterministic local fictional fixture, not live Meta or permit evidence.
+
+## Mark, example project and independent review
+
+The Schema mark (`src/components/SchemaMark.tsx`, `public/icon.svg`, `docs/schema-mark.svg`) is two interlocking isometric blocks forming an S on a 30° grid. It renders in graphite (`--sa-ink`) beside the wordmark and on the welcome screen, and serves as the favicon.
+
+The welcome screen offers **Open example project**: a prepared, clearly labeled fictional office at its design checkpoint, built with the application's own domain operations. It contains no Meta output, critique or research retrieval, and its conversation states that no Meta request was made. Feedback on it starts real agent work.
+
+The current proposal shows an **Independent review** row beneath each part the critic reviewed: status in words and an icon, reviewed and revised revisions, and blocking/advisory findings with the quoted claim. It is labeled review input, not approval. The activity band names the review outcome at a checkpoint and gives known runner blockers plain-language titles ("Connect Meta to continue", "This run reached its limit"); the saved reason stays in project details.
+
+`demo-welcome.png` shows the welcome screen. `demo-example-review-controlled.png` shows the example project with a locally injected critique to exercise the review row; it is not live Meta output. Both were captured at 1280 CSS pixels, and the review row was also checked at 390 pixels with no horizontal overflow.
