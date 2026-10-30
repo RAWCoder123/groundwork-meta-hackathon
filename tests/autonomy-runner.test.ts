@@ -189,3 +189,15 @@ test('an incomplete critic response that still carries its tool call is read, no
  const {repo,project,job}=await setup();scripted([...draftUnderstanding],[{id:'crit_incomplete',status:'incomplete',output:[{type:'reasoning'},call('record_critique',{findings:[finding('advisory')]})]}]);
  assert.equal((await drive(repo,job.id)).status,'needs_approval');const saved=(await repo.getProject(project.id))!;assert.equal(saved.critiques![0].status,'clear');assert.equal(saved.critiques![0].findings.length,1);
 });
+
+test('a reply cut off by the output limit before any tool call retries within budget instead of blocking',async()=>{
+ const {repo,project,job}=await setup();const bodies:any[]=[];const replies=[{id:'resp_cut',status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output:[{type:'reasoning'}]},done([call('inspect_project')],'resp_ok')];
+ globalThis.fetch=async(_url,init)=>{bodies.push(JSON.parse(String(init!.body)));return response(replies.shift());};
+ assert.equal((await advanceJob(repo,env,job.id)).status,'advanced');let saved=(await repo.getJob(job.id))!;assert.equal(saved.responseId,undefined);assert.equal(saved.modelRequests,1);assert.match(JSON.stringify(saved.history.at(-1)),/output budget on reasoning/);assert.equal((await repo.getProject(project.id))!.status,'running');
+ repo.due(job.id);assert.equal((await advanceJob(repo,env,job.id)).status,'advanced');saved=(await repo.getJob(job.id))!;assert.equal(saved.modelRequests,2);assert.equal(bodies[0].max_output_tokens,16000);
+});
+
+test('other incomplete replies still stop safely',async()=>{
+ const {repo,project,job}=await setup();globalThis.fetch=async()=>response({id:'resp_filtered',status:'incomplete',incomplete_details:{reason:'content_filter'},output:[]});
+ await advanceJob(repo,env,job.id);assert.equal((await repo.getProject(project.id))!.status,'blocked');
+});

@@ -169,7 +169,7 @@ async function runCritic(repo:Repository,env:AutoEnvironment,key:string,job:Stag
  else{
   if(job.modelRequests>=RUN_LIMITS.modelRequests)return unavailable('The stage model budget was used before independent review could run.');
   job.modelRequests++;job.critic={phase:'reviewing'};job.status='running';if(!await checkpoint(repo,job,token))return {result:{status:'lease_lost',projectId:project.id}};
-  data=await provider(key,undefined,{model:MODEL,instructions:criticInstructions,background:true,store:true,input:criticInput(project,job.stage),tools:[criticTool],parallel_tool_calls:false,max_output_tokens:4000,reasoning:{effort:'low'}});
+  data=await provider(key,undefined,{model:MODEL,instructions:criticInstructions,background:true,store:true,input:criticInput(project,job.stage),tools:[criticTool],parallel_tool_calls:false,max_output_tokens:8000,reasoning:{effort:'low'}});
  }
  data=object(safeJson(data,key));
  if(typeof data.id!=='string'||!data.id||data.id.length>300)throw new ProviderError('Meta returned an invalid response identifier.');
@@ -214,14 +214,18 @@ export async function advanceJob(repo:Repository,env:AutoEnvironment,jobId:strin
   if(job.responseId){data=await provider(key,job.responseId);}
   else{
    job.modelRequests++;job.status='running';if(!await checkpoint(repo,job,token))return {status:'lease_lost',projectId:project.id};
-   const body={model:MODEL,instructions,background:true,store:true,include:['reasoning.encrypted_content','web_search_call.results'],input:job.history,tools:toolsFor(project),parallel_tool_calls:false,max_output_tokens:4000,reasoning:{effort:'medium'}};
+   const body={model:MODEL,instructions,background:true,store:true,include:['reasoning.encrypted_content','web_search_call.results'],input:job.history,tools:toolsFor(project),parallel_tool_calls:false,max_output_tokens:16000,reasoning:{effort:'medium'}};
    data=await provider(key,undefined,body);
   }
   data=object(safeJson(data,key));
   if(typeof data.id!=='string'||!data.id||data.id.length>300)throw new ProviderError('Meta returned an invalid response identifier.');
   job.responseId=data.id;
   if(data.status==='queued'||data.status==='in_progress'){job.status='waiting_provider';job.nextRunAt=new Date(Date.now()+3000).toISOString();await saveJob(repo,job,token);return {status:'waiting_provider',projectId:project.id};}
-  if(data.status!=='completed'||!Array.isArray(data.output)||data.output.length>50)throw new ProviderError('Meta did not complete this stage response. Saved drafts remain available.');
+  // Live runs showed reasoning can consume the whole output budget before any tool call.
+  // That is retried within the stage's request budget instead of blocking the project.
+  const truncated=data.status==='incomplete'&&!!data.incomplete_details&&typeof data.incomplete_details==='object'&&(data.incomplete_details as Obj).reason==='max_output_tokens';
+  if(truncated&&!(Array.isArray(data.output)&&data.output.some(o=>!!o&&typeof o==='object'&&(o as Obj).type==='function_call'))){job.history.push({role:'user',content:'Your previous attempt used its whole output budget on reasoning. Keep reasoning brief and call the next stage tool directly.'});delete job.responseId;job.status='queued';job.nextRunAt=nowIso();await saveJob(repo,job,token);return {status:'advanced',projectId:project.id,detail:'The model used its output budget on reasoning; the stage retries with a shorter turn.'};}
+  if((data.status!=='completed'&&!truncated)||!Array.isArray(data.output)||data.output.length>50)throw new ProviderError('Meta did not complete this stage response. Saved drafts remain available.');
   const output=data.output as Obj[];
   const responseMarker=`response:${data.id}`;
   if(!job.completedCallIds.includes(responseMarker)){const searchCalls=output.filter(o=>o&&typeof o==='object'&&o.type==='web_search_call').length;if(job.toolExecutions+searchCalls>24)throw new ProviderError('This stage reached its approved tool execution limit.');job.toolExecutions+=searchCalls;job.history.push(...output);job.completedCallIds.push(responseMarker);}
