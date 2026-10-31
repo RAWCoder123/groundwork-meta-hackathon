@@ -73,6 +73,20 @@ export async function handleAutonomyApi(request:Request,env:AutoEnvironment,repo
  if(action==='message'){const next=applyFeedback(project,string(data.text,8000));project=await save(repo,project,next);await queue(repo,project);return json({project});}
  if(action==='recipient'){const name=typeof data.name==='string'?data.name.trim().slice(0,200):'',email=string(data.email,254);if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new RequestError(400,'Enter a valid project recipient address.');const next=edit(project,'recipient_selected','The user selected a project recipient. No message has been sent.');next.recipient={name,email};for(const mail of next.mail)if(!['sent','uncertain'].includes(mail.status)){mail.status='stale';const d=next.decisions.find(d=>d.id===mail.decisionId);if(d)d.status='stale';}project=await save(repo,project,next);project=await materializeMail(repo,project);await queue(repo,project);return json({project});}
  if(action==='concept'){let concept;try{concept=validateOfficeConcept(data.concept);}catch{throw new RequestError(400,'The office concept does not pass the geometric checks. Keep rooms, doors, and circulation inside the suite without overlap.');}const next=putArtifact(project,'concept',concept as unknown as Record<string,unknown>);next.messages.push({id:crypto.randomUUID(),role:'user',text:'I edited the current office concept. Preserve these edits when preparing the revised design checkpoint unless I request another change.',createdAt:iso()});project=await save(repo,project,next);await queue(repo,project);return json({project});}
+  if(action==='info-item'){
+ const item=string(data.item,500);
+ const understanding=project.artifacts.find(a=>a.kind==='understanding');
+ const list=understanding?.data.missingInformation;
+ if(!Array.isArray(list)||!list.includes(item))throw new RequestError(400,'Choose an item from the current missing-information list.');
+ const status=String(data.status),owner=String(data.owner);
+ if(!['open','requested','received'].includes(status))throw new RequestError(400,'Choose a valid status.');
+ if(!['client','architect','engineer'].includes(owner))throw new RequestError(400,'Choose a valid owner.');
+ const documentId=data.documentId===null||data.documentId===undefined||data.documentId===''?null:string(data.documentId,180);
+ if(documentId&&!project.documents.some(d=>d.id===documentId))throw new RequestError(400,'Choose one of this project\u2019s uploaded files.');
+ const next=edit(project,'info_item_updated','The user updated a missing-information item. No message has been sent.');
+ next.infoTracker={...(project.infoTracker||{}),[item]:{status:status as 'open'|'requested'|'received',owner:owner as 'client'|'architect'|'engineer',documentId}};
+ project=await save(repo,project,next);return json({project});
+ }
  if(action==='pause'){
  if(typeof data.paused!=='boolean')throw new RequestError(400,'Choose pause or resume.');
  if(data.paused&&project.status!=='running')throw new RequestError(409,'This project is already stopped at a checkpoint. Review the current decision or answer its questions.');

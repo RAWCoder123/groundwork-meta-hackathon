@@ -412,3 +412,13 @@
 .sa-project-blocker[open]>summary { margin-bottom: 14px; }
 
 .sa-agent-activity:has(.sa-activity-history[open]),.sa-agent-tools:has(.sa-activity-history[open]) { align-items: start; }
+
+.sa-tracker-progress{display:flex;align-items:center;gap:12px;margin:8px 0 14px;font-size:14px}
+.sa-tracker-bar{flex:1;height:6px;background:#e3e5dd;border-radius:3px;overflow:hidden}
+.sa-tracker-bar i{display:block;height:100%;background:#475640}
+.sa-tracker-list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.sa-tracker-item{border:1px solid #dcded5;border-radius:10px;padding:12px 14px}
+.sa-tracker-item.received{background:#f1f5ec}
+.sa-tracker-item p{margin:0 0 8px}
+.sa-tracker-controls{display:flex;flex-wrap:wrap;gap:8px}
+.sa-tracker-controls select{font:inherit;padding:6px 8px;border:1px solid #cfd2c7;border-radius:8px;background:#fff}
